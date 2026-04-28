@@ -4,11 +4,11 @@
 
 CivicPlan helps cities connect planning proposals to adopted plan policies. It can show sample cited policy context, highlight consistency factors for staff review, and produce records-ready plan-policy exports.
 
-Current state: `0.1.0` planning policy foundation release. The module includes deterministic sample checks and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
+Current state: `0.1.1` planning policy foundation release. The module includes deterministic sample checks, civiccore==0.3.0 alignment, and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
 
 ## For IT And Technical Staff
 
-CivicPlan is a FastAPI Python package pinned to `civiccore==0.2.0`. The current runtime exposes:
+CivicPlan is a FastAPI Python package pinned to civiccore==0.3.0. The current runtime exposes:
 
 - `GET /`
 - `GET /health`
@@ -31,9 +31,9 @@ bash scripts/verify-release.sh
 ```mermaid
 flowchart LR
   PublicUser["Resident or staff planner"] --> CivicPlan["CivicPlan"]
-  CivicPlan --> CivicCore["CivicCore v0.2.0"]
-  CivicPlan -. released-context .-> CivicZone["CivicZone v0.1.0"]
+  CivicPlan --> CivicCore["CivicCore v0.3.0"]
+  CivicPlan -. released-context .-> CivicZone["CivicZone v0.1.1"]
   CivicPlan -. released-context .-> CivicClerk["CivicClerk v0.1.0"]
 ```
 
-CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v0.1.0 uses deterministic sample policy data only; official plan ingestion and cross-module APIs are future work.
+CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v0.1.1 uses deterministic sample policy data only; official plan ingestion and cross-module APIs are future work.

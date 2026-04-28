@@ -1,4 +1,4 @@
-"""Deterministic comprehensive-plan policy lookup helpers for CivicPlan v0.1.0."""
+"""Deterministic comprehensive-plan policy lookup helpers for CivicPlan v0.1.1."""
 
 from __future__ import annotations
 

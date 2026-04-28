@@ -54,7 +54,7 @@ def root() -> dict[str, str]:
             "CivicPlan package, API foundation, sample cited plan-policy lookup, policy-consistency support, staff-analysis outline, records-ready export checklist, and public UI foundation are online; "
             "official planning determinations, live GIS, live LLM calls, plan document ingestion, and permitting-system integrations are not implemented yet."
         ),
-        "next_step": "Post-v0.1.0 roadmap: plan ingestion, CivicZone policy context API, and staff review workflows",
+        "next_step": "Post-v0.1.1 roadmap: plan ingestion, CivicZone policy context API, and staff review workflows",
     }
 
 

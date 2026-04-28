@@ -1,4 +1,4 @@
-"""Static public UI shell for CivicPlan v0.1.0."""
+"""Static public UI shell for CivicPlan v0.1.1."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ def render_public_lookup_page() -> str:
   .notice { margin:24px 0 0; padding:18px; border:1px dashed #b2603f; border-radius:22px; background:rgba(178,96,63,.10); }
   footer { padding:38px 0 56px; color:var(--muted); }
   :focus-visible { outline:4px solid var(--gold); outline-offset:3px; }
-  @media (max-width:760px) { header{padding-top:34px}.card{grid-column:span 12;padding:20px;border-radius:22px}button{width:100%} }
+  @media (max-width:760px) { header,main,footer{margin:0;max-width:390px;width:100%;padding-left:24px;padding-right:24px}header{padding-top:34px}h1{font-size:clamp(2.2rem,11vw,3rem)}.card{grid-column:span 12;padding:20px;border-radius:22px}button{width:100%} }
 </style>
 </head>
 <body>
@@ -49,7 +49,7 @@ def render_public_lookup_page() -> str:
   <p class="eyebrow">CivicSuite / CivicPlan public sample</p>
   <h1>Find plan policies with citations before the meeting packet gets written.</h1>
   <p class="lede">CivicPlan demonstrates cited comprehensive-plan lookup, policy-consistency support, and staff-analysis outlines. It helps staff and residents find adopted policy context without turning software into the decision-maker.</p>
-  <p><span class="badge">v0.1.0 planning policy foundation</span></p>
+  <p><span class="badge">v0.1.1 planning policy foundation</span></p>
 </header>
 <main id="main" tabindex="-1">
   <section class="grid" aria-labelledby="lookup-title">

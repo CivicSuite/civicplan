@@ -1,4 +1,4 @@
-"""Plan-policy consistency helpers for CivicPlan v0.1.0."""
+"""Plan-policy consistency helpers for CivicPlan v0.1.1."""
 
 from __future__ import annotations
 
