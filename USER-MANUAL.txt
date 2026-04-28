@@ -1,0 +1,39 @@
+# CivicPlan User Manual
+
+## For Residents And Municipal Decision-Makers
+
+CivicPlan helps cities connect planning proposals to adopted plan policies. It can show sample cited policy context, highlight consistency factors for staff review, and produce records-ready plan-policy exports.
+
+Current state: `0.1.0` planning policy foundation release. The module includes deterministic sample checks and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
+
+## For IT And Technical Staff
+
+CivicPlan is a FastAPI Python package pinned to `civiccore==0.2.0`. The current runtime exposes:
+
+- `GET /`
+- `GET /health`
+- `GET /civicplan`
+- `POST /api/v1/civicplan/policies/lookup`
+- `POST /api/v1/civicplan/consistency/check`
+- `POST /api/v1/civicplan/staff-analysis/draft`
+- `POST /api/v1/civicplan/export`
+
+Run local verification with:
+
+```powershell
+python -m pip install -e ".[dev]"
+python -m pytest -q
+bash scripts/verify-release.sh
+```
+
+## Architecture
+
+```mermaid
+flowchart LR
+  PublicUser["Resident or staff planner"] --> CivicPlan["CivicPlan"]
+  CivicPlan --> CivicCore["CivicCore v0.2.0"]
+  CivicPlan -. released-context .-> CivicZone["CivicZone v0.1.0"]
+  CivicPlan -. released-context .-> CivicClerk["CivicClerk v0.1.0"]
+```
+
+CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v0.1.0 uses deterministic sample policy data only; official plan ingestion and cross-module APIs are future work.
