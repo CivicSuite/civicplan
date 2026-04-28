@@ -18,7 +18,8 @@ def test_root_endpoint_states_runtime_boundary() -> None:
 
     assert payload["name"] == "CivicPlan"
     assert payload["version"] == "0.1.1"
-    assert payload["status"] == "planning policy foundation"
+    assert payload["status"] == "planning policy foundation plus policy persistence"
+    assert "database-backed policy and staff-analysis records" in payload["message"]
     assert "official planning determinations" in payload["message"]
     assert "not implemented yet" in payload["message"]
     assert payload["next_step"].startswith("Post-v0.1.1 roadmap")

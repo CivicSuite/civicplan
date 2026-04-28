@@ -4,7 +4,7 @@
 
 CivicPlan helps cities connect planning proposals to adopted plan policies. It can show sample cited policy context, highlight consistency factors for staff review, and produce records-ready plan-policy exports.
 
-Current state: `0.1.1` planning policy foundation release. The module includes deterministic sample checks, civiccore==0.3.0 alignment, and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
+Current state: `0.1.1` planning policy foundation release plus production-depth policy persistence slice. The module includes deterministic sample checks, optional database-backed policy and staff-analysis records, civiccore==0.3.0 alignment, and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
 
 ## For IT And Technical Staff
 
@@ -16,7 +16,10 @@ CivicPlan is a FastAPI Python package pinned to civiccore==0.3.0. The current ru
 - `POST /api/v1/civicplan/policies/lookup`
 - `POST /api/v1/civicplan/consistency/check`
 - `POST /api/v1/civicplan/staff-analysis/draft`
+- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when CIVICPLAN_POLICY_DB_URL is configured
 - `POST /api/v1/civicplan/export`
+
+Set CIVICPLAN_POLICY_DB_URL to persist plan-policy records and staff-analysis outlines. Leave it unset for deterministic sample behavior.
 
 Run local verification with:
 

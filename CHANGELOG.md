@@ -4,6 +4,12 @@ All notable changes to CivicPlan will be documented in this file.
 
 The format follows Keep a Changelog, and this project follows Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+
+- Production-depth policy persistence slice with `CIVICPLAN_POLICY_DB_URL`, persisted plan-policy records, persisted staff-analysis outlines, and retrieval by `analysis_id`.
+
 ## [0.1.1] - 2026-04-28
 
 ### Changed
