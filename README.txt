@@ -14,10 +14,12 @@ Core API:
 - POST /api/v1/civicplan/policies/lookup
 - POST /api/v1/civicplan/context/zoning
 - POST /api/v1/civicplan/consistency/check
-- POST /api/v1/civicplan/staff-analysis/draft
-- GET /api/v1/civicplan/staff-analysis/{analysis_id} when CIVICPLAN_POLICY_DB_URL is configured
+- POST /api/v1/civicplan/staff-analysis/draft; persisted records require X-CivicPlan-Role: staff when CIVICPLAN_POLICY_DB_URL is configured
+- GET /api/v1/civicplan/staff-analysis/{analysis_id} when CIVICPLAN_POLICY_DB_URL is configured and X-CivicPlan-Role: staff is present
 - POST /api/v1/civicplan/export
 
-Set CIVICPLAN_POLICY_DB_URL to enable persistent plan-policy and staff-analysis records. When unset, CivicPlan continues to use deterministic in-memory sample data.
+Quickstart: install CivicCore first with python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0/civiccore-1.0.0-py3-none-any.whl, then run python -m pip install -e ".[dev]".
+
+Set CIVICPLAN_POLICY_DB_URL to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis create/read routes are staff-only and require X-CivicPlan-Role: staff from a trusted staff or service workflow. When unset, CivicPlan continues to use deterministic in-memory sample data.
 
 Code license: Apache 2.0. Documentation license: CC BY 4.0.

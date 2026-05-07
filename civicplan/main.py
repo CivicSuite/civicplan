@@ -1,9 +1,10 @@
 """FastAPI runtime foundation for CivicPlan."""
 
 import os
+from typing import Annotated
 
 from civiccore import __version__ as CIVICCORE_VERSION
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
@@ -28,8 +29,8 @@ _policy_db_url: str | None = None
 
 
 class PolicyLookupRequest(BaseModel):
-    topic: str
-    plan_type: str = "comprehensive"
+    topic: str = Field(min_length=1, max_length=500)
+    plan_type: str = Field(default="comprehensive", min_length=1, max_length=120)
 
 
 class ZoningPolicyContextRequest(BaseModel):
@@ -43,20 +44,20 @@ class ZoningPolicyContextRequest(BaseModel):
 
 
 class ConsistencyRequest(BaseModel):
-    proposal: str
-    policy_id: str
+    proposal: str = Field(min_length=1, max_length=5000)
+    policy_id: str = Field(min_length=1, max_length=160)
 
 
 class StaffAnalysisRequest(BaseModel):
-    project_name: str
-    proposal: str
-    policy_id: str
+    project_name: str = Field(min_length=1, max_length=500)
+    proposal: str = Field(min_length=1, max_length=5000)
+    policy_id: str = Field(min_length=1, max_length=160)
 
 
 class PolicyExportRequest(BaseModel):
-    title: str
-    policy_id: str
-    format: str = "markdown"
+    title: str = Field(min_length=1, max_length=500)
+    policy_id: str = Field(min_length=1, max_length=160)
+    format: str = Field(default="markdown", min_length=1, max_length=40)
 
 
 @app.get("/")
@@ -164,8 +165,12 @@ def consistency_check(request: ConsistencyRequest) -> dict[str, object]:
 
 
 @app.post("/api/v1/civicplan/staff-analysis/draft")
-def staff_analysis(request: StaffAnalysisRequest) -> dict[str, object]:
+def staff_analysis(
+    request: StaffAnalysisRequest,
+    x_civicplan_role: Annotated[str | None, Header()] = None,
+) -> dict[str, object]:
     if _policy_database_url() is not None:
+        _require_staff_role(x_civicplan_role)
         stored = _get_policy_repository().create_staff_analysis(
             project_name=request.project_name,
             proposal=request.proposal,
@@ -184,7 +189,10 @@ def staff_analysis(request: StaffAnalysisRequest) -> dict[str, object]:
 
 
 @app.get("/api/v1/civicplan/staff-analysis/{analysis_id}")
-def get_staff_analysis(analysis_id: str) -> dict[str, object]:
+def get_staff_analysis(
+    analysis_id: str,
+    x_civicplan_role: Annotated[str | None, Header()] = None,
+) -> dict[str, object]:
     if _policy_database_url() is None:
         raise HTTPException(
             status_code=503,
@@ -193,6 +201,7 @@ def get_staff_analysis(analysis_id: str) -> dict[str, object]:
                 "fix": "Set CIVICPLAN_POLICY_DB_URL to retrieve persisted staff-analysis records.",
             },
         )
+    _require_staff_role(x_civicplan_role)
     stored = _get_policy_repository().get_staff_analysis(analysis_id)
     if stored is None:
         raise HTTPException(
@@ -232,6 +241,18 @@ def _dispose_policy_repository() -> None:
     if _policy_repository is not None:
         _policy_repository.engine.dispose()
         _policy_repository = None
+
+
+def _require_staff_role(role: str | None) -> None:
+    if role == "staff":
+        return
+    raise HTTPException(
+        status_code=403,
+        detail={
+            "message": "Persisted CivicPlan staff-analysis records require staff access.",
+            "fix": "Send X-CivicPlan-Role: staff from a trusted staff or service workflow when policy persistence is enabled.",
+        },
+    )
 
 
 def _lookup_plan_policy(*, topic: str, plan_type: str = "comprehensive"):

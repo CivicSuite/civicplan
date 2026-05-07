@@ -113,6 +113,18 @@ def test_existing_endpoint_validation_remains_endpoint_neutral() -> None:
     assert "fields array" in detail["fix"]
 
 
+def test_oversized_policy_lookup_validation_is_actionable() -> None:
+    response = client.post(
+        "/api/v1/civicplan/policies/lookup",
+        json={"topic": "x" * 501, "plan_type": "comprehensive"},
+    )
+
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert "topic" in detail["fields"]
+    assert "fields array" in detail["fix"]
+
+
 def test_consistency_and_staff_analysis_apis() -> None:
     consistency = client.post(
         "/api/v1/civicplan/consistency/check",
@@ -143,6 +155,8 @@ def test_public_ui_route_is_accessible_and_honest() -> None:
     assert '<main id="main" tabindex="-1">' in text
     assert "v0.1.2 planning policy foundation + policy context contract" in text
     assert "<button" not in text
+    assert "<textarea" not in text
+    assert "Static sample proposal" in text
     assert "does not make zoning" in text
     assert "official determinations" in text
     assert "certified ADA" not in text

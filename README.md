@@ -18,6 +18,7 @@ Current state: **v0.1.2 planning policy foundation release plus production-depth
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0/civiccore-1.0.0-py3-none-any.whl
 python -m pip install -e ".[dev]"
 python -m pytest -q
 bash scripts/verify-release.sh
@@ -31,11 +32,11 @@ bash scripts/verify-release.sh
 - `POST /api/v1/civicplan/policies/lookup` returns a cited sample plan policy.
 - `POST /api/v1/civicplan/context/zoning` returns cited plan-policy context for CivicZone questions.
 - `POST /api/v1/civicplan/consistency/check` returns sample consistency-support factors.
-- `POST /api/v1/civicplan/staff-analysis/draft` returns a cited staff-analysis outline.
-- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` retrieves persisted staff-analysis records when `CIVICPLAN_POLICY_DB_URL` is configured.
+- `POST /api/v1/civicplan/staff-analysis/draft` returns a cited staff-analysis outline; persisted records require `X-CivicPlan-Role: staff` when `CIVICPLAN_POLICY_DB_URL` is configured.
+- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` retrieves persisted staff-analysis records when `CIVICPLAN_POLICY_DB_URL` is configured and `X-CivicPlan-Role: staff` is present.
 - `POST /api/v1/civicplan/export` returns a records-ready plan-policy export checklist.
 
-Set `CIVICPLAN_POLICY_DB_URL` to enable persistent plan-policy and staff-analysis records. When unset, CivicPlan continues to use deterministic in-memory sample data.
+Set `CIVICPLAN_POLICY_DB_URL` to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis create/read routes are staff-only and require `X-CivicPlan-Role: staff` from a trusted staff or service workflow. When unset, CivicPlan continues to use deterministic in-memory sample data.
 
 ## License
 

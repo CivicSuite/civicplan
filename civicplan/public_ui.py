@@ -30,9 +30,7 @@ def render_public_lookup_page() -> str:
   h2,h3 { font-family:Georgia,"Times New Roman",serif; letter-spacing:-.03em; }
   h2 { margin:0 0 14px; font-size:clamp(1.8rem,4vw,3rem); }
   p, li { line-height:1.65; }
-  label { font-weight:800; }
-  textarea, input { width:100%; border:1px solid #b9c6cc; border-radius:16px; padding:.85rem 1rem; font:inherit; }
-  textarea, input { background:#f3f7f8; color:var(--ink); }
+  .sample-box { padding:18px; border:1px solid #b9c6cc; border-radius:16px; background:#f3f7f8; color:var(--ink); }
   .result { margin-top:18px; padding:18px; border-left:6px solid var(--green); border-radius:18px; background:white; }
   .warning { border-left-color:#b2603f; background:#fff8f4; }
   .kicker { color:var(--muted); font-size:.86rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
@@ -55,8 +53,8 @@ def render_public_lookup_page() -> str:
     <article class="card large">
       <p class="kicker">Sample plan-policy lookup</p>
       <h2 id="lookup-title">Housing proposal context</h2>
-      <label for="proposal">Sample proposal</label>
-      <textarea id="proposal" rows="4">A small mixed-use housing project near transit, a school, and a neighborhood park.</textarea>
+      <p class="kicker">Static sample proposal</p>
+      <div class="sample-box">A small mixed-use housing project near transit, a school, and a neighborhood park.</div>
       <div class="result" role="status" aria-live="polite">
         <h3>Relevant adopted policy</h3>
         <p><strong>Comprehensive Plan, Housing Element, Policy H-2.1:</strong> Encourage missing-middle housing within walking distance of transit, schools, parks, and daily services.</p>

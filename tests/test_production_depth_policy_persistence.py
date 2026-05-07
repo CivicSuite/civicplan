@@ -32,7 +32,7 @@ def test_policy_and_staff_analysis_records_persist(tmp_path) -> None:
     assert reloaded_analysis is not None
     assert reloaded_analysis.heading == "Plan consistency context for Maple Avenue Homes"
     assert "Comprehensive Plan, Housing Element, Policy H-2.1" in reloaded_analysis.citations
-    db_path.unlink()
+    db_path.unlink(missing_ok=True)
 
 
 def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
@@ -51,9 +51,13 @@ def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
                 "proposal": "Housing near transit and sidewalks.",
                 "policy_id": "housing",
             },
+            headers={"X-CivicPlan-Role": "staff"},
         )
         analysis_id = create_response.json()["analysis_id"]
-        get_response = client.get(f"/api/v1/civicplan/staff-analysis/{analysis_id}")
+        get_response = client.get(
+            f"/api/v1/civicplan/staff-analysis/{analysis_id}",
+            headers={"X-CivicPlan-Role": "staff"},
+        )
     finally:
         main_module._dispose_policy_repository()
         main_module._policy_db_url = None
@@ -65,7 +69,56 @@ def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
     assert get_response.status_code == 200
     assert get_response.json()["analysis_id"] == analysis_id
     assert get_response.json()["review_required"] is True
-    db_path.unlink()
+    db_path.unlink(missing_ok=True)
+
+
+def test_persisted_staff_analysis_requires_staff_role(monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "staff-auth.db"
+    monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
+
+    try:
+        create_response = client.post(
+            "/api/v1/civicplan/staff-analysis/draft",
+            json={
+                "project_name": "Maple Avenue Homes",
+                "proposal": "CONFIDENTIAL: acquire parcel 123 before public notice.",
+                "policy_id": "housing",
+            },
+        )
+        get_response = client.get("/api/v1/civicplan/staff-analysis/not-authorized")
+    finally:
+        main_module._dispose_policy_repository()
+        main_module._policy_db_url = None
+
+    assert create_response.status_code == 403
+    assert get_response.status_code == 403
+    assert "X-CivicPlan-Role: staff" in create_response.json()["detail"]["fix"]
+    db_path.unlink(missing_ok=True)
+
+
+def test_staff_analysis_rejects_oversized_persisted_proposal(monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "staff-validation.db"
+    monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
+
+    try:
+        response = client.post(
+            "/api/v1/civicplan/staff-analysis/draft",
+            json={
+                "project_name": "Maple Avenue Homes",
+                "proposal": "x" * 5001,
+                "policy_id": "housing",
+            },
+            headers={"X-CivicPlan-Role": "staff"},
+        )
+    finally:
+        main_module._dispose_policy_repository()
+        main_module._policy_db_url = None
+
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert "proposal" in detail["fields"]
+    assert "fields array" in detail["fix"]
+    db_path.unlink(missing_ok=True)
 
 
 def test_zoning_context_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:

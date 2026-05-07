@@ -16,15 +16,16 @@ CivicPlan is a FastAPI Python package pinned to `civiccore==1.0.0`. The current 
 - `POST /api/v1/civicplan/policies/lookup`
 - `POST /api/v1/civicplan/context/zoning`
 - `POST /api/v1/civicplan/consistency/check`
-- `POST /api/v1/civicplan/staff-analysis/draft`
-- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when `CIVICPLAN_POLICY_DB_URL` is configured
+- `POST /api/v1/civicplan/staff-analysis/draft`; persisted records require `X-CivicPlan-Role: staff` when `CIVICPLAN_POLICY_DB_URL` is configured
+- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when `CIVICPLAN_POLICY_DB_URL` is configured and `X-CivicPlan-Role: staff` is present
 - `POST /api/v1/civicplan/export`
 
-Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis outlines. Leave it unset for deterministic sample behavior.
+Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require `X-CivicPlan-Role: staff` from a trusted staff or service workflow. Leave it unset for deterministic sample behavior.
 
 Run local verification with:
 
 ```powershell
+python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0/civiccore-1.0.0-py3-none-any.whl
 python -m pip install -e ".[dev]"
 python -m pytest -q
 bash scripts/verify-release.sh
