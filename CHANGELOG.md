@@ -10,6 +10,10 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 - Production-depth policy persistence slice with `CIVICPLAN_POLICY_DB_URL`, persisted plan-policy records, persisted staff-analysis outlines, and retrieval by `analysis_id`.
 
+### Changed
+
+- Aligned CivicPlan's release gate, CI install path, docs, and health-contract test with the published `civiccore==1.0.0` wheel before the CivicZone policy-context contract sprint.
+
 ## [0.1.1] - 2026-04-28
 
 ### Changed
