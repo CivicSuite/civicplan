@@ -6,9 +6,33 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-07
+
+### Added
+
+- Staff-only local plan-policy ingestion through configured `CIVICPLAN_POLICY_DB_URL`.
+- Goal/objective/policy navigator, cited plan Q&A, cross-plan synthesis, amendment history, and progress-target evidence APIs.
+- CivicClerk staff-report context contract and local adversarial integration mocks for CivicZone, CivicClerk, GeoJSON area boundaries, and plan document import fixtures.
+- Public UI copy for v1 navigator/progress/staff-analysis boundaries.
+
+### Changed
+
+- Promoted CivicPlan release surfaces from `0.1.2` to `1.0.0`.
+- Updated product/docs boundaries to avoid official determinations, legal advice, and live external-call claims.
+
+## [0.1.2] - 2026-05-07
+
 ### Added
 
 - Production-depth policy persistence slice with `CIVICPLAN_POLICY_DB_URL`, persisted plan-policy records, persisted staff-analysis outlines, and retrieval by `analysis_id`.
+- CivicZone-facing `POST /api/v1/civicplan/context/zoning` contract that returns cited, review-required plan-policy context without making zoning determinations.
+- Staff-role gate for persisted staff-analysis create/read routes when policy persistence is configured.
+
+### Changed
+
+- Aligned CivicPlan's release gate, CI install path, docs, and health-contract test with the published `civiccore==1.0.0` wheel before the CivicZone policy-context contract sprint.
+- Updated public UI copy to v0.1.2 and removed static no-op/editable controls from the sample lookup.
+- Documented the CivicCore v1.0 wheel prerequisite for clean local installs.
 
 ## [0.1.1] - 2026-04-28
 

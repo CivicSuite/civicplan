@@ -3,20 +3,23 @@ CivicPlan
 
 CivicPlan is the CivicSuite module for comprehensive-plan policy lookup and cited planning analysis support.
 
-Current state: v0.1.1 planning policy foundation release plus production-depth policy persistence slice. This repo ships a FastAPI package aligned to civiccore==0.3.0, health/root endpoints, documentation gates, deterministic sample plan-policy lookup, optional database-backed policy and staff-analysis records via CIVICPLAN_POLICY_DB_URL, policy-consistency support, staff-analysis outline support, records-ready export checklist, and accessible public sample UI at /civicplan.
+Current state: v1.0.0 product release. This repo ships a FastAPI package aligned to civiccore==1.0.0, health/root endpoints, documentation gates, cited plan-policy lookup, staff-only local policy ingestion via CIVICPLAN_POLICY_DB_URL, goal/objective/policy navigation, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, CivicZone and CivicClerk context contracts, policy-consistency support, staff-analysis outline support, records-ready export checklist, local adversarial integration mocks, and accessible public UI at /civicplan.
 
-It does not ship official planning determinations, legal advice, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or production staff-review queues.
+It does not ship official planning determinations, legal advice, live external vendor calls by default, permitting-system write-back, or elected-body decisions.
 
 Core API:
 - GET /
 - GET /health
 - GET /civicplan
 - POST /api/v1/civicplan/policies/lookup
+- POST /api/v1/civicplan/context/zoning
 - POST /api/v1/civicplan/consistency/check
-- POST /api/v1/civicplan/staff-analysis/draft
-- GET /api/v1/civicplan/staff-analysis/{analysis_id} when CIVICPLAN_POLICY_DB_URL is configured
+- POST /api/v1/civicplan/staff-analysis/draft; persisted records require X-CivicPlan-Role: staff when CIVICPLAN_POLICY_DB_URL is configured
+- GET /api/v1/civicplan/staff-analysis/{analysis_id} when CIVICPLAN_POLICY_DB_URL is configured and X-CivicPlan-Role: staff is present
 - POST /api/v1/civicplan/export
 
-Set CIVICPLAN_POLICY_DB_URL to enable persistent plan-policy and staff-analysis records. When unset, CivicPlan continues to use deterministic in-memory sample data.
+Quickstart: install CivicCore first with python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0/civiccore-1.0.0-py3-none-any.whl, then run python -m pip install -e ".[dev]".
+
+Set CIVICPLAN_POLICY_DB_URL to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis create/read routes are staff-only and require X-CivicPlan-Role: staff from a trusted staff or service workflow. When unset, CivicPlan continues to use deterministic in-memory sample data.
 
 Code license: Apache 2.0. Documentation license: CC BY 4.0.
