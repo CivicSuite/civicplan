@@ -34,6 +34,8 @@ required=(
   "civicplan/policy_lookup.py"
   "civicplan/consistency.py"
   "civicplan/staff_analysis.py"
+  "civicplan/plan_workflows.py"
+  "civicplan/integration_mocks.py"
   "civicplan/records_export.py"
   "civicplan/public_ui.py"
 )

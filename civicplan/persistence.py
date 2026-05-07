@@ -106,6 +106,53 @@ class PlanPolicyRepository:
         policy, _source = self.lookup_policy_with_source(topic=topic, plan_type=plan_type)
         return policy
 
+    def upsert_policy(self, *, topic_key: str, policy: PlanPolicy) -> PlanPolicy:
+        now = datetime.now(UTC)
+        normalized_topic = topic_key.strip().casefold()
+        if not normalized_topic:
+            raise ValueError("topic_key is required for plan-policy ingestion.")
+        with self.engine.begin() as connection:
+            existing = connection.execute(
+                sa.select(plan_policy_records.c.policy_id).where(
+                    plan_policy_records.c.policy_id == policy.policy_id
+                )
+            ).first()
+            values = {
+                "policy_id": policy.policy_id,
+                "plan_type": policy.plan_type,
+                "topic_key": normalized_topic,
+                "title": policy.title,
+                "citation": policy.citation,
+                "excerpt": policy.excerpt,
+                "relevance": policy.relevance,
+                "disclaimer": policy.disclaimer,
+                "updated_at": now,
+            }
+            if existing is None:
+                connection.execute(
+                    plan_policy_records.insert().values(**values, created_at=now)
+                )
+            else:
+                connection.execute(
+                    plan_policy_records.update()
+                    .where(plan_policy_records.c.policy_id == policy.policy_id)
+                    .values(**values)
+                )
+        return policy
+
+    def list_policies(self, *, plan_type: str | None = None) -> tuple[PlanPolicy, ...]:
+        with self.engine.begin() as connection:
+            statement = sa.select(plan_policy_records).order_by(
+                plan_policy_records.c.plan_type,
+                plan_policy_records.c.policy_id,
+            )
+            if plan_type:
+                statement = statement.where(
+                    sa.func.lower(plan_policy_records.c.plan_type) == plan_type.strip().casefold()
+                )
+            rows = connection.execute(statement).mappings().all()
+        return tuple(_row_to_policy(row) for row in rows)
+
     def lookup_policy_with_source(
         self, *, topic: str, plan_type: str = "comprehensive"
     ) -> tuple[PlanPolicy, str]:

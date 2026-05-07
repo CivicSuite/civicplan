@@ -6,6 +6,20 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-05-07
+
+### Added
+
+- Staff-only local plan-policy ingestion through configured `CIVICPLAN_POLICY_DB_URL`.
+- Goal/objective/policy navigator, cited plan Q&A, cross-plan synthesis, amendment history, and progress-target evidence APIs.
+- CivicClerk staff-report context contract and local adversarial integration mocks for CivicZone, CivicClerk, GeoJSON area boundaries, and plan document import fixtures.
+- Public UI copy for v1 navigator/progress/staff-analysis boundaries.
+
+### Changed
+
+- Promoted CivicPlan release surfaces from `0.1.2` to `1.0.0`.
+- Updated product/docs boundaries to avoid official determinations, legal advice, and live external-call claims.
+
 ## [0.1.2] - 2026-05-07
 
 ### Added

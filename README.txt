@@ -3,9 +3,9 @@ CivicPlan
 
 CivicPlan is the CivicSuite module for comprehensive-plan policy lookup and cited planning analysis support.
 
-Current state: v0.1.2 planning policy foundation release plus production-depth policy persistence and CivicZone policy-context contract. This repo ships a FastAPI package aligned to civiccore==1.0.0, health/root endpoints, documentation gates, deterministic sample plan-policy lookup, optional database-backed policy and staff-analysis records via CIVICPLAN_POLICY_DB_URL, a CivicZone-facing cited policy-context endpoint, policy-consistency support, staff-analysis outline support, records-ready export checklist, and accessible public sample UI at /civicplan.
+Current state: v1.0.0 product release. This repo ships a FastAPI package aligned to civiccore==1.0.0, health/root endpoints, documentation gates, cited plan-policy lookup, staff-only local policy ingestion via CIVICPLAN_POLICY_DB_URL, goal/objective/policy navigation, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, CivicZone and CivicClerk context contracts, policy-consistency support, staff-analysis outline support, records-ready export checklist, local adversarial integration mocks, and accessible public UI at /civicplan.
 
-It does not ship official planning determinations, legal advice, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or production staff-review queues.
+It does not ship official planning determinations, legal advice, live external vendor calls by default, permitting-system write-back, or elected-body decisions.
 
 Core API:
 - GET /

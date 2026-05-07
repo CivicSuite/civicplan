@@ -153,10 +153,12 @@ def test_public_ui_route_is_accessible_and_honest() -> None:
     text = response.text
     assert '<a class="skip-link" href="#main">Skip to main content</a>' in text
     assert '<main id="main" tabindex="-1">' in text
-    assert "v0.1.2 planning policy foundation + policy context contract" in text
+    assert "v1.0.0 cited plan policy + staff analysis" in text
     assert "<button" not in text
     assert "<textarea" not in text
     assert "Static sample proposal" in text
+    assert "Plan navigator" in text
+    assert "Progress tracking" in text
     assert "does not make zoning" in text
-    assert "official determinations" in text
+    assert "official planning determinations" in text
     assert "certified ADA" not in text

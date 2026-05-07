@@ -11,7 +11,18 @@ from pydantic import BaseModel, Field
 
 from civicplan import __version__
 from civicplan.consistency import check_policy_consistency
+from civicplan.integration_mocks import CivicPlanIntegrationMockLayer, IntegrationError
+from civicplan.plan_workflows import (
+    amendment_history,
+    answer_plan_question,
+    civicclerk_staff_report_context,
+    normalize_ingested_policy,
+    plan_navigator,
+    progress_targets,
+    synthesize_plan_context,
+)
 from civicplan.persistence import PlanPolicyRepository, StoredStaffAnalysis
+from civicplan.policy_lookup import PlanPolicy
 from civicplan.policy_lookup import lookup_plan_policy
 from civicplan.public_ui import render_public_lookup_page
 from civicplan.records_export import build_policy_export
@@ -60,6 +71,37 @@ class PolicyExportRequest(BaseModel):
     format: str = Field(default="markdown", min_length=1, max_length=40)
 
 
+class PolicyIngestRequest(BaseModel):
+    topic_key: str = Field(min_length=1, max_length=160)
+    policy_id: str = Field(min_length=1, max_length=160)
+    plan_type: str = Field(min_length=1, max_length=120)
+    title: str = Field(min_length=1, max_length=500)
+    citation: str = Field(min_length=1, max_length=500)
+    excerpt: str = Field(min_length=1, max_length=5000)
+    relevance: str = Field(min_length=1, max_length=2000)
+    adoption_status: str = Field(default="adopted", min_length=1, max_length=80)
+    source_document: str = Field(min_length=1, max_length=500)
+
+
+class PlanQuestionRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=2000)
+    plan_type: str = Field(default="comprehensive", min_length=1, max_length=120)
+
+
+class PlanSynthesisRequest(BaseModel):
+    topic: str = Field(min_length=1, max_length=500)
+
+
+class CivicClerkContextRequest(BaseModel):
+    agenda_item: str = Field(min_length=1, max_length=500)
+    topic: str = Field(min_length=1, max_length=500)
+
+
+class IntegrationMockRequest(BaseModel):
+    provider: str = Field(min_length=1, max_length=120)
+    payload: dict[str, object] = Field(default_factory=dict)
+
+
 @app.get("/")
 def root() -> dict[str, str]:
     """Return current product state without overstating unshipped behavior."""
@@ -67,12 +109,15 @@ def root() -> dict[str, str]:
     return {
         "name": "CivicPlan",
         "version": __version__,
-        "status": "planning policy foundation plus policy persistence and zoning context contract",
+        "status": "v1 cited planning policy and staff analysis runtime",
         "message": (
-            "CivicPlan package, API foundation, sample cited plan-policy lookup, optional database-backed policy and staff-analysis records, CivicZone policy-context contract, policy-consistency support, staff-analysis outline, records-ready export checklist, and public UI foundation are online; "
-            "official planning determinations, live GIS, live LLM calls, plan document ingestion, and permitting-system integrations are not implemented yet."
+            "CivicPlan v1.0.0 provides cited plan-policy lookup, staff-only local policy ingestion, "
+            "goal/objective/policy navigation, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, "
+            "CivicZone and CivicClerk context contracts, optional database-backed policy and staff-analysis records, records-ready exports, "
+            "local adversarial integration mocks, and an accessible public UI. It does not make official planning determinations, "
+            "provide legal advice, call live external systems by default, or replace planner/elected-body judgment."
         ),
-        "next_step": "Post-v0.1.2 roadmap: plan ingestion, production CivicZone runtime consumption, and staff review workflows",
+        "next_step": "Configure local plan policies with CIVICPLAN_POLICY_DB_URL and keep official actions in staff review.",
     }
 
 
@@ -133,6 +178,112 @@ def public_civicplan_page() -> str:
 def policy_lookup(request: PolicyLookupRequest) -> dict[str, object]:
     result = _lookup_plan_policy(topic=request.topic, plan_type=request.plan_type)
     return result.__dict__
+
+
+@app.post("/api/v1/civicplan/policies/ingest")
+def ingest_policy(
+    request: PolicyIngestRequest,
+    x_civicplan_role: Annotated[str | None, Header()] = None,
+) -> dict[str, object]:
+    _require_staff_role(x_civicplan_role)
+    if _policy_database_url() is None:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "message": "CivicPlan policy ingestion requires configured local persistence.",
+                "fix": "Set CIVICPLAN_POLICY_DB_URL, then retry the staff-only ingestion request.",
+            },
+        )
+    try:
+        record = normalize_ingested_policy(**request.model_dump())
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=422,
+            detail={"message": "Plan policy ingestion payload is invalid.", "fix": str(exc)},
+        ) from exc
+    policy = _get_policy_repository().upsert_policy(
+        topic_key=record.topic_key,
+        policy=record.policy,
+    )
+    return {
+        "policy": policy.__dict__,
+        "adoption_status": record.adoption_status,
+        "source_document": record.source_document,
+        "review_required": True,
+    }
+
+
+@app.get("/api/v1/civicplan/plans/navigator")
+def plans_navigator(plan_type: str | None = None) -> dict[str, object]:
+    policies = _list_plan_policies(plan_type=plan_type)
+    return plan_navigator(policies)
+
+
+@app.post("/api/v1/civicplan/questions/answer")
+def plan_question_answer(request: PlanQuestionRequest) -> dict[str, object]:
+    policies = _list_plan_policies(plan_type=request.plan_type)
+    result = answer_plan_question(
+        question=request.question,
+        plan_type=request.plan_type,
+        policies=policies,
+    )
+    return result.__dict__
+
+
+@app.post("/api/v1/civicplan/plans/synthesis")
+def plan_synthesis(request: PlanSynthesisRequest) -> dict[str, object]:
+    return synthesize_plan_context(topic=request.topic, policies=_list_plan_policies())
+
+
+@app.get("/api/v1/civicplan/amendments/history")
+def plan_amendment_history(plan_type: str | None = None) -> dict[str, object]:
+    return {
+        "items": [amendment.__dict__ for amendment in amendment_history(plan_type=plan_type)],
+        "boundary": "Pending amendments are not treated as adopted plan text.",
+    }
+
+
+@app.get("/api/v1/civicplan/progress/targets")
+def plan_progress_targets(policy_id: str | None = None) -> dict[str, object]:
+    return {
+        "items": [
+            {
+                **target.__dict__,
+                "updated_at": target.updated_at.isoformat(),
+            }
+            for target in progress_targets(policy_id=policy_id)
+        ],
+        "boundary": "Progress statuses are planning-support evidence, not official findings.",
+    }
+
+
+@app.post("/api/v1/civicplan/context/civicclerk")
+def civicclerk_context(request: CivicClerkContextRequest) -> dict[str, object]:
+    return civicclerk_staff_report_context(
+        agenda_item=request.agenda_item,
+        topic=request.topic,
+    )
+
+
+@app.post("/api/v1/civicplan/integrations/mock")
+def integration_mock(request: IntegrationMockRequest) -> dict[str, object]:
+    result = CivicPlanIntegrationMockLayer().run(request.provider, request.payload)
+    if isinstance(result, IntegrationError):
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "message": result.message,
+                "fix": result.fix,
+                "code": result.code,
+                "provider": result.provider,
+            },
+        )
+    return {
+        "provider": result.provider,
+        "records": list(result.records),
+        "source": result.source,
+        "warnings": list(result.warnings),
+    }
 
 
 @app.post("/api/v1/civicplan/context/zoning")
@@ -265,6 +416,15 @@ def _lookup_plan_policy_with_source(*, topic: str, plan_type: str = "comprehensi
     if _policy_database_url() is None:
         return lookup_plan_policy(topic=topic, plan_type=plan_type), "sample"
     return _get_policy_repository().lookup_policy_with_source(topic=topic, plan_type=plan_type)
+
+
+def _list_plan_policies(*, plan_type: str | None = None) -> tuple[PlanPolicy, ...]:
+    if _policy_database_url() is None:
+        policies = tuple(lookup_plan_policy(topic=key) for key in ("housing", "transportation", "parks"))
+        if plan_type is None:
+            return policies
+        return tuple(policy for policy in policies if policy.plan_type == plan_type.strip().casefold())
+    return _get_policy_repository().list_policies(plan_type=plan_type)
 
 
 def _zoning_context_topic(request: ZoningPolicyContextRequest) -> str:

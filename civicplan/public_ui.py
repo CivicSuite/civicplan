@@ -1,4 +1,4 @@
-"""Static public UI shell for CivicPlan v0.1.2."""
+"""Static public UI shell for CivicPlan v1.0.0."""
 
 from __future__ import annotations
 
@@ -46,12 +46,12 @@ def render_public_lookup_page() -> str:
   <p class="eyebrow">CivicSuite / CivicPlan public sample</p>
   <h1>Find plan policies with citations before the meeting packet gets written.</h1>
   <p class="lede">CivicPlan demonstrates cited comprehensive-plan lookup, policy-consistency support, and staff-analysis outlines. It helps staff and residents find adopted policy context without turning software into the decision-maker.</p>
-  <p><span class="badge">v0.1.2 planning policy foundation + policy context contract</span></p>
+  <p><span class="badge">v1.0.0 cited plan policy + staff analysis</span></p>
 </header>
 <main id="main" tabindex="-1">
   <section class="grid" aria-labelledby="lookup-title">
     <article class="card large">
-      <p class="kicker">Sample plan-policy lookup</p>
+      <p class="kicker">Plan-policy lookup</p>
       <h2 id="lookup-title">Housing proposal context</h2>
       <p class="kicker">Static sample proposal</p>
       <div class="sample-box">A small mixed-use housing project near transit, a school, and a neighborhood park.</div>
@@ -76,6 +76,16 @@ def render_public_lookup_page() -> str:
       <div class="result"><p>Exports preserve source policy, proposal text, reviewer, generated outline, and final staff edits.</p></div>
     </article>
     <article class="card">
+      <p class="kicker">Plan navigator</p>
+      <h2>Browse adopted structure</h2>
+      <div class="result"><p>Residents and staff can browse policies by plan type, topic, goal, and citation while pending amendments stay labeled for review.</p></div>
+    </article>
+    <article class="card">
+      <p class="kicker">Progress tracking</p>
+      <h2>Evidence, not findings</h2>
+      <div class="result"><p>Measurable targets include status, evidence, citation, and review-required boundaries for staff follow-up.</p></div>
+    </article>
+    <article class="card">
       <p class="kicker">Planning boundary</p>
       <h2>No official determination</h2>
       <div class="result warning"><p>CivicPlan does not make zoning, land-use, environmental, legal, or elected-body decisions. Staff and officials remain responsible for every official action.</p></div>
@@ -83,7 +93,7 @@ def render_public_lookup_page() -> str:
   </section>
   <section class="notice" aria-labelledby="boundary-title">
     <h2 id="boundary-title">Important boundaries</h2>
-    <p>This foundation release exposes a deterministic CivicZone-facing policy-context API. It does not ship live GIS, live LLM calls, plan document ingestion, official determinations, permitting-system integrations, or legal advice.</p>
+    <p>CivicPlan v1.0.0 provides cited plan lookup, local policy ingestion when configured, CivicZone and CivicClerk context contracts, amendment history, progress targets, and adversarial local integration validation. It does not call live external systems by default, provide legal advice, or make official planning determinations.</p>
   </section>
 </main>
 <footer><p>CivicPlan is part of the Apache 2.0 CivicSuite open-source municipal AI project.</p></footer>
