@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "civicplan"
-version = "0.1.1"
+version = "0.1.2"
 description = "CivicPlan runtime foundation for comprehensive-plan policy lookup and cited planning analysis support."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -40,8 +40,20 @@ include = [
   "scripts",
   "tests",
   "README.md",
+  "README.txt",
   "CHANGELOG.md",
   "USER-MANUAL.md",
+  "USER-MANUAL.txt",
+  "CONTRIBUTING.md",
+  "SECURITY.md",
+  "SUPPORT.md",
+  "CODE_OF_CONDUCT.md",
+  "AGENTS.md",
+  ".github",
+  "docs",
+  "MILESTONE_0_7_DONE.md",
+  "PRODUCTION_DEPTH_POLICY_PERSISTENCE_DONE.md",
+  "PRODUCTION_DEPTH_ZONE_CONTEXT_CONTRACT_DONE.md",
   "LICENSE-CODE",
   "LICENSE-DOCS",
 ]

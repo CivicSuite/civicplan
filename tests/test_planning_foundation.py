@@ -66,6 +66,53 @@ def test_policy_lookup_api_success_shape() -> None:
     assert payload["disclaimer"]
 
 
+def test_zoning_policy_context_api_returns_cited_review_required_contract() -> None:
+    response = client.post(
+        "/api/v1/civicplan/context/zoning",
+        json={
+            "topic": "missing middle housing near transit",
+            "zone_code": "R-2",
+            "use": "ADU",
+            "civiczone_context_id": "zone-question-123",
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["policy_id"] == "comp-plan-housing-2.1"
+    assert payload["plan_type"] == "comprehensive"
+    assert payload["citation"] == "Comprehensive Plan, Housing Element, Policy H-2.1"
+    assert payload["excerpt"]
+    assert payload["relevance"]
+    assert payload["review_required"] is True
+    assert payload["source"] == "sample"
+    assert payload["civiczone_context_id"] == "zone-question-123"
+    assert "not a zoning determination" in payload["boundary"]
+    assert "legal advice" in payload["boundary"]
+    assert "does not make land-use determinations" in payload["disclaimer"]
+
+
+def test_zoning_policy_context_validation_is_actionable() -> None:
+    response = client.post("/api/v1/civicplan/context/zoning", json={})
+
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert "topic" in detail["message"]
+    assert "non-empty topic" in detail["fix"]
+    assert "topic" in detail["fields"]
+
+
+def test_existing_endpoint_validation_remains_endpoint_neutral() -> None:
+    response = client.post("/api/v1/civicplan/consistency/check", json={})
+
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert "policy_id" in detail["fields"]
+    assert "proposal" in detail["fields"]
+    assert "zone_code" not in detail["fix"]
+    assert "fields array" in detail["fix"]
+
+
 def test_consistency_and_staff_analysis_apis() -> None:
     consistency = client.post(
         "/api/v1/civicplan/consistency/check",
@@ -94,7 +141,8 @@ def test_public_ui_route_is_accessible_and_honest() -> None:
     text = response.text
     assert '<a class="skip-link" href="#main">Skip to main content</a>' in text
     assert '<main id="main" tabindex="-1">' in text
-    assert "v0.1.1 planning policy foundation" in text
+    assert "v0.1.2 planning policy foundation + policy context contract" in text
+    assert "<button" not in text
     assert "does not make zoning" in text
     assert "official determinations" in text
     assert "certified ADA" not in text

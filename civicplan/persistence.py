@@ -103,21 +103,26 @@ class PlanPolicyRepository:
                 )
 
     def lookup_policy(self, *, topic: str, plan_type: str = "comprehensive") -> PlanPolicy:
+        policy, _source = self.lookup_policy_with_source(topic=topic, plan_type=plan_type)
+        return policy
+
+    def lookup_policy_with_source(
+        self, *, topic: str, plan_type: str = "comprehensive"
+    ) -> tuple[PlanPolicy, str]:
         normalized_topic = topic.strip().casefold()
         normalized_plan = plan_type.strip().casefold()
         with self.engine.begin() as connection:
-            row = connection.execute(
+            rows = connection.execute(
                 sa.select(plan_policy_records).where(
-                    sa.or_(
-                        sa.func.lower(plan_policy_records.c.topic_key) == normalized_topic,
-                        sa.func.lower(plan_policy_records.c.policy_id) == normalized_topic,
-                        sa.func.lower(plan_policy_records.c.plan_type) == normalized_plan,
-                    )
+                    sa.func.lower(plan_policy_records.c.plan_type) == normalized_plan
                 )
-            ).mappings().first()
-        if row is not None:
-            return _row_to_policy(row)
-        return lookup_plan_policy(topic=topic, plan_type=plan_type)
+            ).mappings().all()
+        for row in rows:
+            topic_key = str(row["topic_key"]).casefold()
+            policy_id = str(row["policy_id"]).casefold()
+            if topic_key in normalized_topic or policy_id == normalized_topic:
+                return _row_to_policy(row), "persisted"
+        return lookup_plan_policy(topic=topic, plan_type=plan_type), "sample"
 
     def create_staff_analysis(
         self, *, project_name: str, proposal: str, policy_id: str

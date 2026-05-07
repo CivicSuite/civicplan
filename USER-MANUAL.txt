@@ -4,7 +4,7 @@
 
 CivicPlan helps cities connect planning proposals to adopted plan policies. It can show sample cited policy context, highlight consistency factors for staff review, and produce records-ready plan-policy exports.
 
-Current state: `0.1.1` planning policy foundation release plus production-depth policy persistence slice. The module includes deterministic sample checks, optional database-backed policy and staff-analysis records, civiccore==1.0.0 alignment, and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
+Current state: `0.1.2` planning policy foundation release plus production-depth policy persistence and CivicZone policy-context contract. The module includes deterministic sample checks, optional database-backed policy and staff-analysis records, a cited zoning policy-context endpoint for CivicZone, civiccore==1.0.0 alignment, and a public sample UI at `/civicplan`. It does not provide legal advice, official planning determinations, live GIS, live LLM calls, plan document ingestion, permitting-system integrations, or final staff-report approval.
 
 ## For IT And Technical Staff
 
@@ -14,6 +14,7 @@ CivicPlan is a FastAPI Python package pinned to civiccore==1.0.0. The current ru
 - `GET /health`
 - `GET /civicplan`
 - `POST /api/v1/civicplan/policies/lookup`
+- `POST /api/v1/civicplan/context/zoning`
 - `POST /api/v1/civicplan/consistency/check`
 - `POST /api/v1/civicplan/staff-analysis/draft`
 - `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when CIVICPLAN_POLICY_DB_URL is configured
@@ -35,8 +36,8 @@ bash scripts/verify-release.sh
 flowchart LR
   PublicUser["Resident or staff planner"] --> CivicPlan["CivicPlan"]
   CivicPlan --> CivicCore["CivicCore v1.0.0"]
-  CivicPlan -. released-context .-> CivicZone["CivicZone v0.1.1"]
+  CivicPlan -. policy-context API .-> CivicZone["CivicZone v0.1.2"]
   CivicPlan -. released-context .-> CivicClerk["CivicClerk v0.1.0"]
 ```
 
-CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v0.1.1 uses deterministic sample policy data only; official plan ingestion and cross-module APIs are future work.
+CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v0.1.2 exposes a deterministic, review-required policy-context API for CivicZone; official plan ingestion, live GIS, and production cross-module runtime orchestration are future work.

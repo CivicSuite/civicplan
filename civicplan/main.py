@@ -3,9 +3,10 @@
 import os
 
 from civiccore import __version__ as CIVICCORE_VERSION
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, JSONResponse
+from pydantic import BaseModel, Field
 
 from civicplan import __version__
 from civicplan.consistency import check_policy_consistency
@@ -29,6 +30,16 @@ _policy_db_url: str | None = None
 class PolicyLookupRequest(BaseModel):
     topic: str
     plan_type: str = "comprehensive"
+
+
+class ZoningPolicyContextRequest(BaseModel):
+    topic: str = Field(min_length=1, max_length=500)
+    zone_code: str | None = Field(default=None, max_length=80)
+    use: str | None = Field(default=None, max_length=160)
+    parcel_number: str | None = Field(default=None, max_length=120)
+    address: str | None = Field(default=None, max_length=500)
+    plan_type: str = Field(default="comprehensive", min_length=1, max_length=120)
+    civiczone_context_id: str | None = Field(default=None, max_length=160)
 
 
 class ConsistencyRequest(BaseModel):
@@ -55,12 +66,12 @@ def root() -> dict[str, str]:
     return {
         "name": "CivicPlan",
         "version": __version__,
-        "status": "planning policy foundation plus policy persistence",
+        "status": "planning policy foundation plus policy persistence and zoning context contract",
         "message": (
-            "CivicPlan package, API foundation, sample cited plan-policy lookup, optional database-backed policy and staff-analysis records, policy-consistency support, staff-analysis outline, records-ready export checklist, and public UI foundation are online; "
+            "CivicPlan package, API foundation, sample cited plan-policy lookup, optional database-backed policy and staff-analysis records, CivicZone policy-context contract, policy-consistency support, staff-analysis outline, records-ready export checklist, and public UI foundation are online; "
             "official planning determinations, live GIS, live LLM calls, plan document ingestion, and permitting-system integrations are not implemented yet."
         ),
-        "next_step": "Post-v0.1.1 roadmap: plan ingestion, CivicZone policy context API, and staff review workflows",
+        "next_step": "Post-v0.1.2 roadmap: plan ingestion, production CivicZone runtime consumption, and staff review workflows",
     }
 
 
@@ -76,6 +87,40 @@ def health() -> dict[str, str]:
     }
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    fields = sorted(
+        {
+            ".".join(str(part) for part in error.get("loc", [])[1:])
+            for error in exc.errors()
+            if len(error.get("loc", [])) > 1
+        }
+    )
+    field_list = ", ".join(fields) if fields else "request body"
+    if request.url.path == "/api/v1/civicplan/context/zoning":
+        fix = (
+            "Send a JSON body with a non-empty topic and optional zone_code, use, "
+            "parcel_number, address, plan_type, and civiczone_context_id fields."
+        )
+    else:
+        fix = (
+            "Send a JSON body that includes the required field names listed in "
+            "the fields array, using strings for text inputs."
+        )
+    return JSONResponse(
+        status_code=422,
+        content={
+            "detail": {
+                "message": f"CivicPlan could not validate: {field_list}.",
+                "fix": fix,
+                "fields": fields,
+            }
+        },
+    )
+
+
 @app.get("/civicplan", response_class=HTMLResponse)
 def public_civicplan_page() -> str:
     """Return the public sample plan-policy lookup UI."""
@@ -87,6 +132,29 @@ def public_civicplan_page() -> str:
 def policy_lookup(request: PolicyLookupRequest) -> dict[str, object]:
     result = _lookup_plan_policy(topic=request.topic, plan_type=request.plan_type)
     return result.__dict__
+
+
+@app.post("/api/v1/civicplan/context/zoning")
+def zoning_policy_context(request: ZoningPolicyContextRequest) -> dict[str, object]:
+    policy, source = _lookup_plan_policy_with_source(
+        topic=_zoning_context_topic(request),
+        plan_type=request.plan_type,
+    )
+    return {
+        "policy_id": policy.policy_id,
+        "plan_type": policy.plan_type,
+        "citation": policy.citation,
+        "excerpt": policy.excerpt,
+        "relevance": policy.relevance,
+        "disclaimer": policy.disclaimer,
+        "review_required": True,
+        "source": source,
+        "civiczone_context_id": request.civiczone_context_id,
+        "boundary": (
+            "CivicPlan provides cited comprehensive-plan context only; it is not a "
+            "zoning determination, planning approval, or legal advice."
+        ),
+    }
 
 
 @app.post("/api/v1/civicplan/consistency/check")
@@ -170,6 +238,25 @@ def _lookup_plan_policy(*, topic: str, plan_type: str = "comprehensive"):
     if _policy_database_url() is None:
         return lookup_plan_policy(topic=topic, plan_type=plan_type)
     return _get_policy_repository().lookup_policy(topic=topic, plan_type=plan_type)
+
+
+def _lookup_plan_policy_with_source(*, topic: str, plan_type: str = "comprehensive"):
+    if _policy_database_url() is None:
+        return lookup_plan_policy(topic=topic, plan_type=plan_type), "sample"
+    return _get_policy_repository().lookup_policy_with_source(topic=topic, plan_type=plan_type)
+
+
+def _zoning_context_topic(request: ZoningPolicyContextRequest) -> str:
+    parts = [request.topic]
+    if request.use:
+        parts.append(request.use)
+    if request.zone_code:
+        parts.append(request.zone_code)
+    if request.address:
+        parts.append(request.address)
+    if request.parcel_number:
+        parts.append(request.parcel_number)
+    return " ".join(part.strip() for part in parts if part and part.strip())
 
 
 def _stored_staff_analysis_response(stored: StoredStaffAnalysis) -> dict[str, object]:
