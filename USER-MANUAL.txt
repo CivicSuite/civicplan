@@ -4,11 +4,11 @@
 
 CivicPlan helps cities connect planning proposals to adopted plan policies. It can show sample cited policy context, highlight consistency factors for staff review, and produce records-ready plan-policy exports.
 
-Current state: `1.0.0` product release. The module includes cited plan-policy lookup, staff-only local policy ingestion, optional database-backed policy and staff-analysis records, a goal/objective/policy navigator, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, a cited zoning policy-context endpoint for CivicZone, a draft staff-report context endpoint for CivicClerk, local adversarial integration mocks, civiccore==1.0.0 alignment, and a public UI at `/civicplan`. It does not provide legal advice, official planning determinations, live external calls by default, permitting-system write-back, or final staff-report approval.
+Current state: published `1.0.0` label under suite-wide release-recovery review. The module includes cited plan-policy lookup, staff-only local policy ingestion, optional database-backed policy and staff-analysis records, a goal/objective/policy navigator, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, a cited zoning policy-context endpoint for CivicZone, a draft staff-report context endpoint for CivicClerk, local adversarial integration mocks, CivicCore v1.0.0 release-wheel alignment, and a public UI at `/civicplan`. Do not promote the label as freshly product-ready until recovery gates, post-merge CI, and broader suite retest evidence re-earn that status. It does not provide legal advice, official planning determinations, live external calls by default, permitting-system write-back, or final staff-report approval.
 
 ## For IT And Technical Staff
 
-CivicPlan is a FastAPI Python package pinned to civiccore==1.0.0. The current runtime exposes:
+CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.0.0 release wheel. The current runtime exposes:
 
 - `GET /`
 - `GET /health`
