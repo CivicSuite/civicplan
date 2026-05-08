@@ -13,7 +13,7 @@ authors = [
   { name = "CivicSuite contributors" }
 ]
 dependencies = [
-  "civiccore==1.0.0",
+  "civiccore @ https://github.com/CivicSuite/civiccore/releases/download/v1.0/civiccore-1.0.0-py3-none-any.whl",
   "fastapi>=0.115.0,<1.0.0",
   "sqlalchemy>=2.0.0,<3.0.0",
   "uvicorn[standard]>=0.30.0,<1.0.0",
@@ -62,4 +62,6 @@ include = [
 target-version = "py311"
 line-length = 100
 
+[tool.hatch.metadata]
+allow-direct-references = true
 

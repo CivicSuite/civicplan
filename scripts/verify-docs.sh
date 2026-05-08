@@ -58,6 +58,9 @@ bad_markers=(
   "plan document ingestion is available"
   "permitting-system integrations are available"
   "production staff-review queues are available"
+  "v1.0.0 product release"
+  "1.0.0 product release"
+  "current product release"
 )
 
 for file in "${current_files[@]}"; do

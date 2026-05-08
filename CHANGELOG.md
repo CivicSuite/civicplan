@@ -8,6 +8,12 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 ## [1.0.0] - 2026-05-07
 
+### Recovery note
+
+- The `1.0.0` label is under suite-wide release-recovery review. Treat it as
+  provisional until recovery gates, post-merge CI, and broader suite retest
+  evidence re-earn product-ready status.
+
 ### Added
 
 - Staff-only local plan-policy ingestion through configured `CIVICPLAN_POLICY_DB_URL`.
@@ -17,7 +23,8 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 ### Changed
 
-- Promoted CivicPlan release surfaces from `0.1.2` to `1.0.0`.
+- Published CivicPlan release surfaces at `1.0.0`; the label is provisional
+  during the later suite-wide release-recovery pass.
 - Updated product/docs boundaries to avoid official determinations, legal advice, and live external-call claims.
 
 ## [0.1.2] - 2026-05-07
@@ -30,7 +37,7 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 ### Changed
 
-- Aligned CivicPlan's release gate, CI install path, docs, and health-contract test with the published `civiccore==1.0.0` wheel before the CivicZone policy-context contract sprint.
+- Aligned CivicPlan's release gate, CI install path, docs, and health-contract test with the published CivicCore v1.0.0 wheel before the CivicZone policy-context contract sprint.
 - Updated public UI copy to v0.1.2 and removed static no-op/editable controls from the sample lookup.
 - Documented the CivicCore v1.0 wheel prerequisite for clean local installs.
 
