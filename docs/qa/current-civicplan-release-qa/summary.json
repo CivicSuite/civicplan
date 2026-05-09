@@ -1,0 +1,58 @@
+[
+  {
+    "name": "resident-desktop",
+    "path": "/civicplan",
+    "width": 1440,
+    "height": 1000,
+    "expect": "Find plan policies with citations before the meeting packet gets written.",
+    "status": 200,
+    "overflow": false,
+    "focus": "Skip to main content",
+    "consoleMessages": [],
+    "pageErrors": [],
+    "screenshot": "docs\\qa\\current-civicplan-release-qa\\resident-desktop.png",
+    "passed": true
+  },
+  {
+    "name": "resident-mobile",
+    "path": "/civicplan",
+    "width": 390,
+    "height": 844,
+    "expect": "Housing proposal context",
+    "status": 200,
+    "overflow": false,
+    "focus": "Skip to main content",
+    "consoleMessages": [],
+    "pageErrors": [],
+    "screenshot": "docs\\qa\\current-civicplan-release-qa\\resident-mobile.png",
+    "passed": true
+  },
+  {
+    "name": "docs-desktop",
+    "path": "/docs",
+    "width": 1440,
+    "height": 1000,
+    "expect": "CivicPlan",
+    "status": 200,
+    "overflow": false,
+    "focus": "/openapi.json",
+    "consoleMessages": [],
+    "pageErrors": [],
+    "screenshot": "docs\\qa\\current-civicplan-release-qa\\docs-desktop.png",
+    "passed": true
+  },
+  {
+    "name": "health-json",
+    "path": "/health",
+    "width": 800,
+    "height": 600,
+    "expect": "civicplan",
+    "status": 200,
+    "overflow": false,
+    "focus": "DIV",
+    "consoleMessages": [],
+    "pageErrors": [],
+    "screenshot": "docs\\qa\\current-civicplan-release-qa\\health-json.png",
+    "passed": true
+  }
+]
