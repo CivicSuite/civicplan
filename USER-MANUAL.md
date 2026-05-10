@@ -33,7 +33,7 @@ Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis 
 Run local verification with:
 
 ```powershell
-python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0/civiccore-1.0.0-py3-none-any.whl
+python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0.1/civiccore-1.0.1-py3-none-any.whl
 python -m pip install -e ".[dev]"
 python -m pytest -q
 bash scripts/verify-release.sh
