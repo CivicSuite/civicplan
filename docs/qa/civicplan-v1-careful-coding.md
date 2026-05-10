@@ -1,4 +1,4 @@
-# CivicPlan v1.0.0 Careful-Coding Evidence
+# CivicPlan v0.2.0 Careful-Coding Evidence
 
 Date: 2026-05-07
 
