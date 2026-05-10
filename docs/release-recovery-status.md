@@ -15,7 +15,7 @@ fresh recovery evidence.
 
 | Gate | Current status | Evidence |
 | --- | --- | --- |
-| Public claim recovery | Passing locally | README, text README, user manual, docs landing page, changelog, and docs checks now describe the recovered v1.0.0 label without overstating legal advice, official determinations, live vendor behavior, or elected-body decisions. |
+| Public claim recovery | Passing locally | README, text README, user manual, docs landing page, changelog, and docs checks now describe the recovered v0.2.0 recovery label without overstating legal advice, official determinations, live vendor behavior, or elected-body decisions. |
 | Native WSL/Linux proof | Historical pass | WSL selected `.venv-wsl/bin/python3`, reported platform `linux`, and completed `VERIFY-RELEASE: PASSED`. |
 | Runtime install proof | Historical pass | Fresh WSL editable install succeeded with the published CivicCore v1.0.0 release wheel and Hatch direct references enabled. |
 | Security scan | Historical pass | Tracked-file secret scan returned no matches. |

@@ -1,4 +1,4 @@
-# CivicPlan v1.0.0 Release-Gate Audit
+# CivicPlan v0.2.0 Release-Gate Audit
 
 Date: 2026-05-07
 
@@ -15,7 +15,7 @@ Date: 2026-05-07
 - Runtime sign-off confidence: High
 - CI/workflow posture: `verify.yml` runs `scripts/verify-release.sh`; `release.yml` publishes v-tag artifacts
 
-Real state: CivicPlan v1.0.0 provides cited plan-policy lookup, staff-only structured local policy ingestion, goal/objective/policy navigation, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, CivicZone and CivicClerk context contracts, policy-consistency support, staff-analysis outlines, records-ready exports, local adversarial integration mocks, database-backed policy/staff-analysis records when configured, and browser-verified public UI. It does not provide legal advice, official planning determinations, live vendor calls by default, permitting write-back, or elected-body decisions.
+Real state: CivicPlan v0.2.0 provides cited plan-policy lookup, staff-only structured local policy ingestion, goal/objective/policy navigation, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, CivicZone and CivicClerk context contracts, policy-consistency support, staff-analysis outlines, records-ready exports, local adversarial integration mocks, database-backed policy/staff-analysis records when configured, and browser-verified public UI. It does not provide legal advice, official planning determinations, live vendor calls by default, permitting write-back, or elected-body decisions.
 
 Top cross-cutting finding: `PM-001` full plan-book file parsing is not shipped. This is acceptable for v1 because the release documents structured local policy ingestion, not automatic PDF/DOCX parsing.
 
