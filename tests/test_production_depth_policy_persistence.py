@@ -38,6 +38,8 @@ def test_policy_and_staff_analysis_records_persist(tmp_path) -> None:
 def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
     db_path = tmp_path / "api-policy-records.db"
     monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("CIVICPLAN_STAFF_API_KEY", "test-staff-key")
+    staff_headers = {"X-CivicPlan-Role": "staff", "X-CivicPlan-Staff-Key": "test-staff-key"}
 
     try:
         policy_response = client.post(
@@ -51,12 +53,12 @@ def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
                 "proposal": "Housing near transit and sidewalks.",
                 "policy_id": "housing",
             },
-            headers={"X-CivicPlan-Role": "staff"},
+            headers=staff_headers,
         )
         analysis_id = create_response.json()["analysis_id"]
         get_response = client.get(
             f"/api/v1/civicplan/staff-analysis/{analysis_id}",
-            headers={"X-CivicPlan-Role": "staff"},
+            headers=staff_headers,
         )
     finally:
         main_module._dispose_policy_repository()
@@ -75,6 +77,7 @@ def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
 def test_persisted_staff_analysis_requires_staff_role(monkeypatch, tmp_path) -> None:
     db_path = tmp_path / "staff-auth.db"
     monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("CIVICPLAN_STAFF_API_KEY", "test-staff-key")
 
     try:
         create_response = client.post(
@@ -99,6 +102,7 @@ def test_persisted_staff_analysis_requires_staff_role(monkeypatch, tmp_path) -> 
 def test_staff_analysis_rejects_oversized_persisted_proposal(monkeypatch, tmp_path) -> None:
     db_path = tmp_path / "staff-validation.db"
     monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
+    monkeypatch.setenv("CIVICPLAN_STAFF_API_KEY", "test-staff-key")
 
     try:
         response = client.post(
@@ -108,7 +112,7 @@ def test_staff_analysis_rejects_oversized_persisted_proposal(monkeypatch, tmp_pa
                 "proposal": "x" * 5001,
                 "policy_id": "housing",
             },
-            headers={"X-CivicPlan-Role": "staff"},
+            headers={"X-CivicPlan-Role": "staff", "X-CivicPlan-Staff-Key": "test-staff-key"},
         )
     finally:
         main_module._dispose_policy_repository()

@@ -24,16 +24,16 @@ CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.0.0 r
 - `POST /api/v1/civicplan/context/civicclerk`
 - `POST /api/v1/civicplan/integrations/mock`
 - `POST /api/v1/civicplan/consistency/check`
-- `POST /api/v1/civicplan/staff-analysis/draft`; persisted records require `X-CivicPlan-Role: staff` when `CIVICPLAN_POLICY_DB_URL` is configured
-- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when `CIVICPLAN_POLICY_DB_URL` is configured and `X-CivicPlan-Role: staff` is present
+- `POST /api/v1/civicplan/staff-analysis/draft`; persisted records require `X-CivicPlan-Role: staff` and `X-CivicPlan-Staff-Key` when `CIVICPLAN_POLICY_DB_URL` is configured
+- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when `CIVICPLAN_POLICY_DB_URL` is configured and both staff headers are present
 - `POST /api/v1/civicplan/export`
 
-Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require `X-CivicPlan-Role: staff` from a trusted staff or service workflow. Leave it unset for deterministic sample behavior.
+Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require `CIVICPLAN_STAFF_API_KEY`, `X-CivicPlan-Role: staff`, and matching `X-CivicPlan-Staff-Key`. CivicPlan uses CivicCore `staff_key_gate` for timing-safe key comparison. Leave it unset for deterministic sample behavior.
 
 Run local verification with:
 
 ```powershell
-python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.0.1/civiccore-1.0.1-py3-none-any.whl
+python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.1.0/civiccore-1.1.0-py3-none-any.whl
 python -m pip install -e ".[dev]"
 python -m pytest -q
 bash scripts/verify-release.sh

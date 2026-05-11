@@ -7,7 +7,7 @@ from civicplan.main import app
 
 
 client = TestClient(app)
-STAFF_HEADERS = {"X-CivicPlan-Role": "staff"}
+STAFF_HEADERS = {"X-CivicPlan-Role": "staff", "X-CivicPlan-Staff-Key": "test-staff-key"}
 
 
 @pytest.fixture(autouse=True)
@@ -84,6 +84,7 @@ def test_staff_policy_ingestion_requires_database_and_persists(tmp_path, monkeyp
     )
     db_url = f"sqlite+pysqlite:///{tmp_path / 'policies.db'}"
     monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", db_url)
+    monkeypatch.setenv("CIVICPLAN_STAFF_API_KEY", "test-staff-key")
     created = client.post(
         "/api/v1/civicplan/policies/ingest",
         json=_ingest_payload(),
@@ -105,6 +106,7 @@ def test_staff_policy_ingestion_requires_database_and_persists(tmp_path, monkeyp
 
 def test_policy_ingestion_labels_pending_language(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite+pysqlite:///{tmp_path / 'pending.db'}")
+    monkeypatch.setenv("CIVICPLAN_STAFF_API_KEY", "test-staff-key")
     payload = _ingest_payload()
     payload["adoption_status"] = "pending"
 

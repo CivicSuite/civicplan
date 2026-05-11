@@ -4,6 +4,7 @@ import os
 from typing import Annotated
 
 from civiccore import __version__ as CIVICCORE_VERSION
+from civiccore.auth import staff_key_gate
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -37,6 +38,7 @@ app = FastAPI(
 
 _policy_repository: PlanPolicyRepository | None = None
 _policy_db_url: str | None = None
+_require_staff_key = staff_key_gate("CIVICPLAN_STAFF_API_KEY", "X-CivicPlan-Staff-Key")
 
 
 class PolicyLookupRequest(BaseModel):
@@ -184,8 +186,8 @@ def policy_lookup(request: PolicyLookupRequest) -> dict[str, object]:
 def ingest_policy(
     request: PolicyIngestRequest,
     x_civicplan_role: Annotated[str | None, Header()] = None,
+    x_civicplan_staff_key: Annotated[str | None, Header()] = None,
 ) -> dict[str, object]:
-    _require_staff_role(x_civicplan_role)
     if _policy_database_url() is None:
         raise HTTPException(
             status_code=503,
@@ -194,6 +196,7 @@ def ingest_policy(
                 "fix": "Set CIVICPLAN_POLICY_DB_URL, then retry the staff-only ingestion request.",
             },
         )
+    _require_staff_role(x_civicplan_role, x_civicplan_staff_key)
     try:
         record = normalize_ingested_policy(**request.model_dump())
     except ValueError as exc:
@@ -319,9 +322,10 @@ def consistency_check(request: ConsistencyRequest) -> dict[str, object]:
 def staff_analysis(
     request: StaffAnalysisRequest,
     x_civicplan_role: Annotated[str | None, Header()] = None,
+    x_civicplan_staff_key: Annotated[str | None, Header()] = None,
 ) -> dict[str, object]:
     if _policy_database_url() is not None:
-        _require_staff_role(x_civicplan_role)
+        _require_staff_role(x_civicplan_role, x_civicplan_staff_key)
         stored = _get_policy_repository().create_staff_analysis(
             project_name=request.project_name,
             proposal=request.proposal,
@@ -343,6 +347,7 @@ def staff_analysis(
 def get_staff_analysis(
     analysis_id: str,
     x_civicplan_role: Annotated[str | None, Header()] = None,
+    x_civicplan_staff_key: Annotated[str | None, Header()] = None,
 ) -> dict[str, object]:
     if _policy_database_url() is None:
         raise HTTPException(
@@ -352,7 +357,7 @@ def get_staff_analysis(
                 "fix": "Set CIVICPLAN_POLICY_DB_URL to retrieve persisted staff-analysis records.",
             },
         )
-    _require_staff_role(x_civicplan_role)
+    _require_staff_role(x_civicplan_role, x_civicplan_staff_key)
     stored = _get_policy_repository().get_staff_analysis(analysis_id)
     if stored is None:
         raise HTTPException(
@@ -394,16 +399,8 @@ def _dispose_policy_repository() -> None:
         _policy_repository = None
 
 
-def _require_staff_role(role: str | None) -> None:
-    if role == "staff":
-        return
-    raise HTTPException(
-        status_code=403,
-        detail={
-            "message": "Persisted CivicPlan staff-analysis records require staff access.",
-            "fix": "Send X-CivicPlan-Role: staff from a trusted staff or service workflow when policy persistence is enabled.",
-        },
-    )
+def _require_staff_role(role: str | None, staff_key_header: str | None) -> None:
+    _require_staff_key(role=role, staff_key=staff_key_header)
 
 
 def _lookup_plan_policy(*, topic: str, plan_type: str = "comprehensive"):
