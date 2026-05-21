@@ -113,7 +113,7 @@ def root() -> dict[str, str]:
         "version": __version__,
         "status": "v1 cited planning policy and staff analysis runtime",
         "message": (
-            "CivicPlan v1.0.0 provides cited plan-policy lookup, staff-only local policy ingestion, "
+            "CivicPlan v0.2.1 provides cited plan-policy lookup, staff-only local policy ingestion, "
             "goal/objective/policy navigation, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, "
             "CivicZone and CivicClerk context contracts, optional database-backed policy and staff-analysis records, records-ready exports, "
             "local adversarial integration mocks, and an accessible public UI. It does not make official planning determinations, "

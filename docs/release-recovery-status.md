@@ -5,7 +5,7 @@ Repo: `CivicSuite/civicplan`
 
 ## Current Verdict
 
-`v1.0.0` is the active public-use module release for CivicPlan. The
+`v1.0.0` is the active corrective demotion state for CivicPlan. The
 current release pass rechecks the repo with local release gates, browser QA,
 documentation truth checks, build artifacts, adversarial integration tests, and
 current CivicCore v1.1.0 dependency alignment. The previous demotion remains
@@ -15,7 +15,7 @@ historical context only.
 
 | Gate | Current status | Evidence |
 | --- | --- | --- |
-| Public claim recovery | Passing locally | README, text README, user manual, docs landing page, changelog, and docs checks now describe the v1.0.0 public-use module release without overstating legal advice, official determinations, live vendor behavior, permitting write-back, or elected-body decisions. |
+| Public claim recovery | Passing locally | README, text README, user manual, docs landing page, changelog, and docs checks now describe the v1.0.0 corrective demotion state without overstating legal advice, official determinations, live vendor behavior, permitting write-back, or elected-body decisions. |
 | Native WSL/Linux proof | Historical pass | WSL selected `.venv-wsl/bin/python3`, reported platform `linux`, and completed `VERIFY-RELEASE: PASSED`. |
 | Runtime install proof | Historical pass | Fresh WSL editable install succeeded with the published CivicCore release wheel and Hatch direct references enabled. |
 | Security scan | Historical pass | Tracked-file secret scan returned no matches. |

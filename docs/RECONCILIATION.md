@@ -1,6 +1,6 @@
 # Reconciliation
 
-| Driver | CivicPlan v1.0.0 result |
+| Driver | CivicPlan v0.2.1 result |
 |---|---|
 | Unified spec CivicPlan catalog entry | Comprehensive plans, small-area plans, transportation plans, parks plans, and sustainability plans represented through deterministic cited policy-support helpers. |
 | Suite non-negotiables | Docs, tests, browser QA, Apache 2.0 code license, CC BY 4.0 docs license, and CivicCore pin included. |
