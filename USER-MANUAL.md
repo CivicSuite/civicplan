@@ -4,11 +4,11 @@
 
 CivicPlan helps cities connect planning proposals to adopted plan policies. It can show sample cited policy context, highlight consistency factors for staff review, and produce records-ready plan-policy exports.
 
-Current state: published 0.2.0 recovery label recovered through suite release-recovery evidence. The module includes cited plan-policy lookup, staff-only local policy ingestion, optional database-backed policy and staff-analysis records, a goal/objective/policy navigator, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, a cited zoning policy-context endpoint for CivicZone, a draft staff-report context endpoint for CivicClerk, local adversarial integration mocks, CivicCore v1.0.0 release-wheel alignment, and a public UI at `/civicplan`. See `docs/release-recovery-status.md` for the local release gate, browser QA, and CI evidence. It does not provide legal advice, official planning determinations, live external calls by default, permitting-system write-back, or final staff-report approval.
+Current state: v1.0.0 public-use module release. The module includes cited plan-policy lookup, staff-only local policy ingestion, optional database-backed policy and staff-analysis records, a goal/objective/policy navigator, cited plan Q&A, cross-plan synthesis, amendment history, progress tracking, a cited zoning policy-context endpoint for CivicZone, a draft staff-report context endpoint for CivicClerk, local adversarial integration mocks, CivicCore v1.1.0 release-wheel alignment, and a public UI at `/civicplan`. See `docs/release-recovery-status.md` for the release gate, browser QA, and CI evidence. It does not provide legal advice, official planning determinations, live external calls by default, permitting-system write-back, or final staff-report approval.
 
 ## For IT And Technical Staff
 
-CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.0.0 release wheel. The current runtime exposes:
+CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.1.0 release wheel. The current runtime exposes:
 
 - `GET /`
 - `GET /health`
@@ -44,10 +44,9 @@ bash scripts/verify-release.sh
 ```mermaid
 flowchart LR
   PublicUser["Resident or staff planner"] --> CivicPlan["CivicPlan"]
-  CivicPlan --> CivicCore["CivicCore v1.0.0"]
-CivicPlan -. policy-context API .-> CivicZone["CivicZone v0.2.0"]
+  CivicPlan --> CivicCore["CivicCore v1.1.0"]
+CivicPlan -. policy-context API .-> CivicZone["CivicZone v1.0.0"]
 CivicPlan -. staff-report context .-> CivicClerk["CivicClerk v1.0.0"]
-  CivicPlan -. released-context .-> CivicClerk["CivicClerk v0.1.0"]
 ```
 
-CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v0.2.0 exposes deterministic, review-required context contracts for CivicZone and CivicClerk; live vendor calls and official decisions remain outside CivicPlan.
+CivicPlan depends on CivicCore. CivicCore does not depend on CivicPlan. CivicPlan v1.0.0 exposes deterministic, review-required context contracts for CivicZone and CivicClerk; live vendor calls and official decisions remain outside CivicPlan.

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0] - 2026-05-21
+
+### Changed
+
+- Promoted CivicPlan from the demoted recovery label to a v1.0.0 public-use module release candidate.
+- Synchronized package, runtime, docs, tests, and release verifier surfaces around CivicCore v1.1.0.
+- Preserved the planning-safety boundary: CivicPlan provides cited planning support and staff-analysis context, not official planning determinations, legal advice, live vendor calls by default, permitting write-back, or elected-body decisions.
+
 ## [0.2.0] - 2026-05-11
 
 ### Changed

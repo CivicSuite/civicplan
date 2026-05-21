@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_package_version_is_100() -> None:
-    assert civicplan.__version__ == "0.2.0"
+    assert civicplan.__version__ == "1.0.0"
 
 
 def test_pyproject_uses_published_civiccore_release_wheel() -> None:
@@ -27,13 +27,20 @@ def test_pyproject_uses_published_civiccore_release_wheel() -> None:
     assert "civiccore==1.0.0" not in dependencies
 
 
+def test_ci_workflows_use_current_civiccore_release_wheel() -> None:
+    for path in [ROOT / ".github" / "workflows" / "verify.yml", ROOT / ".github" / "workflows" / "release.yml"]:
+        text = path.read_text(encoding="utf-8")
+        assert "v1.1.0/civiccore-1.1.0-py3-none-any.whl" in text, path
+        assert "v1.0.1/civiccore-1.0.1-py3-none-any.whl" not in text, path
+
+
 def test_root_endpoint_states_runtime_boundary() -> None:
     response = client.get("/")
     assert response.status_code == 200
     payload = response.json()
 
     assert payload["name"] == "CivicPlan"
-    assert payload["version"] == "0.2.0"
+    assert payload["version"] == "1.0.0"
     assert payload["status"] == "v1 cited planning policy and staff analysis runtime"
     assert "staff-only local policy ingestion" in payload["message"]
     assert "CivicZone and CivicClerk context contracts" in payload["message"]
@@ -48,7 +55,7 @@ def test_health_endpoint_reports_versions() -> None:
 
     assert payload["status"] == "ok"
     assert payload["service"] == "civicplan"
-    assert payload["version"] == "0.2.0"
+    assert payload["version"] == "1.0.0"
     assert payload["civiccore_version"] == "1.1.0"
 
 
@@ -66,11 +73,11 @@ def test_documentation_gate_blocks_stale_product_release_claims() -> None:
     script = (ROOT / "scripts" / "verify-docs.sh").read_text(encoding="utf-8")
 
     assert "v0.2.0 recovery release" in script
-    assert "0.2.0 recovery release" in script
+    assert "published v0.2.0 recovery label" in script
     assert "current product release" in script
 
 
-def test_current_docs_mark_v1_label_as_recovered_without_product_release_overclaim() -> None:
+def test_current_docs_mark_v1_release_candidate_without_overclaim() -> None:
     docs = {
         "README.md": (ROOT / "README.md").read_text(encoding="utf-8"),
         "README.txt": (ROOT / "README.txt").read_text(encoding="utf-8"),
@@ -81,6 +88,6 @@ def test_current_docs_mark_v1_label_as_recovered_without_product_release_overcla
 
     for path, text in docs.items():
         lowered = text.lower()
-        assert "release-recovery" in lowered, path
-        assert "provisional" not in lowered, path
-        assert "product release" not in lowered, path
+        assert "v1.0.0 public-use module release" in lowered, path
+        assert "demoted recovery label" not in lowered, path
+        assert "official planning determinations" in lowered, path

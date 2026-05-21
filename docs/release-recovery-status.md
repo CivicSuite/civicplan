@@ -1,23 +1,23 @@
-# CivicPlan Release Recovery Status
+# CivicPlan Release Status
 
-Date: 2026-05-09
+Date: 2026-05-21
 Repo: `CivicSuite/civicplan`
 
 ## Current Verdict
 
-`v1.0.0` exists as a published label. The suite release-recovery pass has now
-rechecked the repo with the local release gate, live browser QA, documentation
-truth checks, build artifacts, and current CivicCore v1.0.0 dependency
-alignment. The original release date remains historical; this file records the
-fresh recovery evidence.
+`v1.0.0` is the active public-use module release for CivicPlan. The
+current release pass rechecks the repo with local release gates, browser QA,
+documentation truth checks, build artifacts, adversarial integration tests, and
+current CivicCore v1.1.0 dependency alignment. The previous demotion remains
+historical context only.
 
 ## Recovery Gates
 
 | Gate | Current status | Evidence |
 | --- | --- | --- |
-| Public claim recovery | Passing locally | README, text README, user manual, docs landing page, changelog, and docs checks now describe the recovered v0.2.0 recovery label without overstating legal advice, official determinations, live vendor behavior, or elected-body decisions. |
+| Public claim recovery | Passing locally | README, text README, user manual, docs landing page, changelog, and docs checks now describe the v1.0.0 public-use module release without overstating legal advice, official determinations, live vendor behavior, permitting write-back, or elected-body decisions. |
 | Native WSL/Linux proof | Historical pass | WSL selected `.venv-wsl/bin/python3`, reported platform `linux`, and completed `VERIFY-RELEASE: PASSED`. |
-| Runtime install proof | Historical pass | Fresh WSL editable install succeeded with the published CivicCore v1.0.0 release wheel and Hatch direct references enabled. |
+| Runtime install proof | Historical pass | Fresh WSL editable install succeeded with the published CivicCore release wheel and Hatch direct references enabled. |
 | Security scan | Historical pass | Tracked-file secret scan returned no matches. |
 | Docs-source enforcement | Passing locally | `scripts/verify-docs.sh` blocks stale product-release claims. |
 | Mock-vs-production labeling | Passing locally | Existing docs distinguish local adversarial mocks, no legal advice, no official planning determinations, and no live external calls by default. |
@@ -39,7 +39,8 @@ fresh recovery evidence.
 
 ## Sign-Off Boundary
 
-This recovery status does not erase or rewrite the existing `1.0.0` package
-version. It changes the public posture: CivicPlan's current `v1.0.0` code path
-has fresh local release-gate and browser evidence. Remote PR/CI evidence is the
-remaining publication step for this recovery update.
+This release status does not claim official planning determinations, legal
+advice, live vendor calls by default, permitting-system write-back, elected-body
+decisions, suite-wide city readiness, or macOS lifecycle certification. Remote
+PR/CI, release assets, and CivicSuite installer/module-selection truth are
+recorded separately when the release is published and reconciled.
