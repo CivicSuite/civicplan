@@ -75,8 +75,8 @@ for file in "${current_files[@]}"; do
 done
 
 required_markers=(
-  "v1.0.0 public-use module release"
-  "CivicCore v1.1.0"
+  "v0.2.1 corrective demotion state"
+  "CivicCore v1.1.0 release wheel"
 )
 
 for marker in "${required_markers[@]}"; do

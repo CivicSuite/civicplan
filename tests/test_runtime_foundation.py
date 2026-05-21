@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_package_version_is_100() -> None:
-    assert civicplan.__version__ == "1.0.0"
+    assert civicplan.__version__ == "0.2.1"
 
 
 def test_pyproject_uses_published_civiccore_release_wheel() -> None:
@@ -40,7 +40,7 @@ def test_root_endpoint_states_runtime_boundary() -> None:
     payload = response.json()
 
     assert payload["name"] == "CivicPlan"
-    assert payload["version"] == "1.0.0"
+    assert payload["version"] == "0.2.1"
     assert payload["status"] == "v1 cited planning policy and staff analysis runtime"
     assert "staff-only local policy ingestion" in payload["message"]
     assert "CivicZone and CivicClerk context contracts" in payload["message"]
@@ -55,7 +55,7 @@ def test_health_endpoint_reports_versions() -> None:
 
     assert payload["status"] == "ok"
     assert payload["service"] == "civicplan"
-    assert payload["version"] == "1.0.0"
+    assert payload["version"] == "0.2.1"
     assert payload["civiccore_version"] == "1.1.0"
 
 
@@ -75,9 +75,10 @@ def test_documentation_gate_blocks_stale_product_release_claims() -> None:
     assert "v0.2.0 recovery release" in script
     assert "published v0.2.0 recovery label" in script
     assert "current product release" in script
+    assert "v0.2.1 corrective demotion state" in script
 
 
-def test_current_docs_mark_v1_release_candidate_without_overclaim() -> None:
+def test_current_docs_mark_corrective_demotion_without_overclaim() -> None:
     docs = {
         "README.md": (ROOT / "README.md").read_text(encoding="utf-8"),
         "README.txt": (ROOT / "README.txt").read_text(encoding="utf-8"),
@@ -88,6 +89,7 @@ def test_current_docs_mark_v1_release_candidate_without_overclaim() -> None:
 
     for path, text in docs.items():
         lowered = text.lower()
-        assert "v1.0.0 public-use module release" in lowered, path
+        assert "v0.2.1 corrective demotion state" in lowered, path
+        assert "previous v1.0.0 release was published in error" in lowered, path
         assert "demoted recovery label" not in lowered, path
         assert "official planning determinations" in lowered, path
