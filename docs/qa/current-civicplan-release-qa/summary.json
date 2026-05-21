@@ -1,58 +1,68 @@
-[
-  {
-    "name": "resident-desktop",
-    "path": "/civicplan",
-    "width": 1440,
-    "height": 1000,
-    "expect": "Find plan policies with citations before the meeting packet gets written.",
-    "status": 200,
-    "overflow": false,
-    "focus": "Skip to main content",
-    "consoleMessages": [],
-    "pageErrors": [],
-    "screenshot": "docs\\qa\\current-civicplan-release-qa\\resident-desktop.png",
-    "passed": true
+{
+  "module": "CivicPlan",
+  "version": "1.0.0",
+  "base_url": "http://127.0.0.1:18080",
+  "results": [
+    {
+      "name": "resident-desktop",
+      "path": "/civicplan",
+      "viewport": "1440x1000",
+      "status": 200,
+      "screenshot": "docs\\qa\\current-civicplan-release-qa\\resident-desktop.png",
+      "console_messages": [],
+      "page_errors": [],
+      "horizontal_overflow": false,
+      "first_focus": "Skip to main content",
+      "visible_version": true,
+      "boundary_copy_visible": true
+    },
+    {
+      "name": "resident-mobile",
+      "path": "/civicplan",
+      "viewport": "390x844",
+      "status": 200,
+      "screenshot": "docs\\qa\\current-civicplan-release-qa\\resident-mobile.png",
+      "console_messages": [],
+      "page_errors": [],
+      "horizontal_overflow": false,
+      "first_focus": "Skip to main content",
+      "visible_version": true,
+      "boundary_copy_visible": true
+    },
+    {
+      "name": "docs-desktop",
+      "path": "/docs",
+      "viewport": "1440x1000",
+      "status": 200,
+      "screenshot": "docs\\qa\\current-civicplan-release-qa\\docs-desktop.png",
+      "console_messages": [],
+      "page_errors": [],
+      "horizontal_overflow": false,
+      "first_focus": "/openapi.json",
+      "visible_version": false,
+      "boundary_copy_visible": false
+    },
+    {
+      "name": "health-json",
+      "path": "/health",
+      "viewport": "900x600",
+      "status": 200,
+      "screenshot": "docs\\qa\\current-civicplan-release-qa\\health-json.png",
+      "console_messages": [],
+      "page_errors": [],
+      "horizontal_overflow": false,
+      "first_focus": "",
+      "visible_version": false,
+      "boundary_copy_visible": false
+    }
+  ],
+  "ui_state_matrix": {
+    "success": "browser-rendered at desktop and mobile widths",
+    "loading": "not applicable to the static public UI; no async loading state is exposed",
+    "empty": "not applicable to the static public UI; API empty/no-match behavior is covered by deterministic fallback tests",
+    "error": "API validation and auth error states are covered by tests with actionable fix copy",
+    "partial_degraded": "not applicable to the static public UI; optional persistence disabled state is covered by 503 API tests"
   },
-  {
-    "name": "resident-mobile",
-    "path": "/civicplan",
-    "width": 390,
-    "height": 844,
-    "expect": "Housing proposal context",
-    "status": 200,
-    "overflow": false,
-    "focus": "Skip to main content",
-    "consoleMessages": [],
-    "pageErrors": [],
-    "screenshot": "docs\\qa\\current-civicplan-release-qa\\resident-mobile.png",
-    "passed": true
-  },
-  {
-    "name": "docs-desktop",
-    "path": "/docs",
-    "width": 1440,
-    "height": 1000,
-    "expect": "CivicPlan",
-    "status": 200,
-    "overflow": false,
-    "focus": "/openapi.json",
-    "consoleMessages": [],
-    "pageErrors": [],
-    "screenshot": "docs\\qa\\current-civicplan-release-qa\\docs-desktop.png",
-    "passed": true
-  },
-  {
-    "name": "health-json",
-    "path": "/health",
-    "width": 800,
-    "height": 600,
-    "expect": "civicplan",
-    "status": 200,
-    "overflow": false,
-    "focus": "DIV",
-    "consoleMessages": [],
-    "pageErrors": [],
-    "screenshot": "docs\\qa\\current-civicplan-release-qa\\health-json.png",
-    "passed": true
-  }
-]
+  "copy_review": "Visible copy states CivicPlan is cited support only and does not make official planning determinations, provide legal advice, call live external systems by default, or replace staff/elected judgment.",
+  "keyboard_focus": "First Tab reaches the skip link on desktop and mobile."
+}

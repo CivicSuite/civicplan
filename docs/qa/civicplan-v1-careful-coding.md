@@ -1,25 +1,48 @@
-# CivicPlan v0.2.0 Careful-Coding Evidence
+# CivicPlan v1.0.0 Careful-Coding Evidence
 
-Date: 2026-05-07
+Date: 2026-05-21
+Scope: release-truth promotion from demoted v0.2.0 to v1.0.0.
 
-Scope: CivicPlan active module only.
+## Step 1 - Callers / Consumers
 
-## Pre-Edit Trace
+- Runtime version consumers: `civicplan/__init__.py`, `civicplan/main.py`, `/health`, FastAPI app metadata.
+- Packaging consumers: `pyproject.toml`, `scripts/verify-release.sh`, GitHub `verify.yml`, GitHub `release.yml`.
+- Docs consumers: README, text README, user manual, security note, docs index, implementation plan, reconciliation, release status, changelog.
+- Test consumers: runtime foundation tests, planning foundation public UI test, release verifier.
+- UX consumers: `/civicplan` public page and `/docs` generated FastAPI docs.
 
-1. Callers read: policy lookup, persistence repository, staff analysis, records export, public UI, runtime routes, release verifier.
-2. Runtime context traced: FastAPI app, optional `CIVICPLAN_POLICY_DB_URL`, trusted staff header, WSL/bash release gate.
-3. Fan-out search: stale version strings, shipped/planned markers, CivicZone/CivicClerk references, docs claims, placeholder imports.
-4. Data contract identified: `PlanPolicy`, persisted policy records, staff analysis records, plan Q&A payloads, integration mock results.
-5. Blast radius: API responses, public UI, docs, release artifacts, tests, GitHub release workflow.
+## Step 2 - Runtime Context
 
-## Post-Edit Proof
+The changed version and dependency strings are read during import, FastAPI route handling, CI workflow setup, shell release verification, package build, and browser-rendered static HTML. No async/sync contract changed.
 
-6. End-to-end re-read: ingestion, navigator, Q&A, synthesis, amendment history, progress targets, CivicZone/CivicClerk contracts, integration mocks, docs, release script.
-7. Code path narrated: staff posts a local policy with `X-CivicPlan-Role: staff`, repository stores it under `CIVICPLAN_POLICY_DB_URL`, lookup and Q&A return cited review-required policy context, and public UI keeps official decisions with staff.
-8. Render/data path proved: Playwright desktop/mobile `/civicplan` checks saved screenshots, verified visible navigator/progress/boundary copy, confirmed skip-link focus, and recorded zero browser console errors.
-9. Five-lens self-audit:
-   - Engineering: full tests passed; WSL release verifier passed; route/docs version surfaces aligned.
-   - UX: public UI now describes navigator, progress, and official-determination boundaries.
-   - QA: `scripts/verify-release.sh` passed with 29 tests and v1 artifacts.
-   - Tests: v1 workflow tests cover ingestion, navigator, Q&A, synthesis, amendment/progress, CivicClerk context, and adversarial mocks.
-   - Docs: README, changelog, user manual, security note, docs index, implementation plan, reconciliation, and release workflow updated.
+## Step 3 - Pattern Fan-Out
+
+Searched current-facing surfaces for `0.2.0`, `v0.2.0`, stale CivicCore/CivicZone references, and release-candidate wording. Remaining `0.2.0` hits are limited to docs verifier banlist and tests that assert the banlist remains present.
+
+## Step 4 - Data Contract
+
+The release contract changes from demoted recovery label to `1.0.0`; the API schema and endpoint shapes do not change. CivicCore dependency truth remains a direct v1.1.0 release wheel.
+
+## Step 5 - Blast Radius
+
+This changes release truth across code, docs, tests, workflows, release verifier, and public UI. If only one layer moved, CivicPlan could produce a false v1 artifact or stale CI proof; the fix moved all mirrored surfaces together.
+
+## Step 6 - File Re-Read
+
+Re-read changed runtime, verifier, docs, workflow, and test files through diff and targeted grep after edits.
+
+## Step 7 - Full Path
+
+Operator installs CivicPlan -> package imports `__version__` -> `/health` reports CivicPlan `1.0.0` and CivicCore `1.1.0` -> resident opens `/civicplan` -> page shows v1.0.0 cited support and planning boundary copy -> release verifier builds `civicplan-1.0.0` artifacts and SHA256SUMS.
+
+## Step 8 - New State Consumption
+
+The `1.0.0` value is consumed by package metadata, `/health`, root status copy, public UI copy, docs, release verifier artifact names, and tests. The CivicCore v1.1.0 dependency is consumed by `pyproject.toml`, workflow install steps, README/manual quickstarts, and tests.
+
+## Step 9 - Five-Lens Self-Audit
+
+- Principal engineer: no API shape changed; CI dependency pin drift was found and fixed.
+- UX: browser screenshots show v1 visible, no console/page errors, no overflow, skip-link focus works.
+- QA: tests, docs, Ruff, release verifier, action-budget, and diff check pass.
+- Tests: added workflow dependency truth regression coverage.
+- Docs: current-facing docs now align to v1.0.0 and avoid official-determination/legal/live-vendor/suite-ready overclaims.

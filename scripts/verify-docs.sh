@@ -61,6 +61,8 @@ bad_markers=(
   "v0.2.0 recovery release"
   "0.2.0 recovery release"
   "current product release"
+  "published v0.2.0 recovery label"
+  "demoted recovery label"
 )
 
 for file in "${current_files[@]}"; do
@@ -70,6 +72,18 @@ for file in "${current_files[@]}"; do
       exit 1
     fi
   done
+done
+
+required_markers=(
+  "v1.0.0 public-use module release"
+  "CivicCore v1.1.0"
+)
+
+for marker in "${required_markers[@]}"; do
+  if ! grep -Fq "$marker" README.md; then
+    echo "FAIL: required current release marker '$marker' missing from README.md" >&2
+    exit 1
+  fi
 done
 
 echo "VERIFY-DOCS: PASSED"
