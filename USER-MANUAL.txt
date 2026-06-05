@@ -26,11 +26,11 @@ CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.2.0 r
 - `POST /api/v1/civicplan/context/civicclerk`
 - `POST /api/v1/civicplan/integrations/mock`
 - `POST /api/v1/civicplan/consistency/check`
-- `POST /api/v1/civicplan/staff-analysis/draft`; persisted records require X-CivicPlan-Role: staff when CIVICPLAN_POLICY_DB_URL is configured
-- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when CIVICPLAN_POLICY_DB_URL is configured and X-CivicPlan-Role: staff is present
+- `POST /api/v1/civicplan/staff-analysis/draft`; persisted records require X-CivicPlan-Role: staff and X-CivicPlan-Staff-Key when CIVICPLAN_POLICY_DB_URL is configured
+- `GET /api/v1/civicplan/staff-analysis/{analysis_id}` when CIVICPLAN_POLICY_DB_URL is configured and both staff headers are present
 - `POST /api/v1/civicplan/export`
 
-Set CIVICPLAN_POLICY_DB_URL to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require X-CivicPlan-Role: staff from a trusted staff or service workflow. Leave it unset for deterministic sample behavior.
+Set CIVICPLAN_POLICY_DB_URL to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require CIVICPLAN_STAFF_API_KEY, X-CivicPlan-Role: staff, and matching X-CivicPlan-Staff-Key. Leave it unset for deterministic sample behavior.
 
 Before public use, check /ready or /api/v1/civicplan/readiness. The readiness gate is not-ready until a local policy database is configured, the schema is ready, and adopted local policies are loaded.
 
