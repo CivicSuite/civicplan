@@ -21,7 +21,7 @@ Searched current-facing surfaces for `0.2.0`, `v0.2.0`, stale CivicCore/CivicZon
 
 ## Step 4 - Data Contract
 
-The release contract changes from demoted recovery label to `1.0.0`; the API schema and endpoint shapes do not change. CivicCore dependency truth remains a direct v1.1.0 release wheel.
+The release contract changes from demoted recovery label to `1.0.0`; the API schema and endpoint shapes do not change. CivicCore dependency truth remains a direct v1.2.0 release wheel.
 
 ## Step 5 - Blast Radius
 
@@ -33,11 +33,11 @@ Re-read changed runtime, verifier, docs, workflow, and test files through diff a
 
 ## Step 7 - Full Path
 
-Operator installs CivicPlan -> package imports `__version__` -> `/health` reports CivicPlan `1.0.0` and CivicCore `1.1.0` -> resident opens `/civicplan` -> page shows v1.0.0 cited support and planning boundary copy -> release verifier builds `civicplan-1.0.0` artifacts and SHA256SUMS.
+Operator installs CivicPlan -> package imports `__version__` -> `/health` reports CivicPlan `0.2.2` and CivicCore `1.2.0` -> resident opens `/civicplan` -> page shows v0.2.2 corrective demotion support and planning boundary copy -> release verifier builds `civicplan-0.2.2` artifacts and SHA256SUMS.
 
 ## Step 8 - New State Consumption
 
-The `1.0.0` value is consumed by package metadata, `/health`, root status copy, public UI copy, docs, release verifier artifact names, and tests. The CivicCore v1.1.0 dependency is consumed by `pyproject.toml`, workflow install steps, README/manual quickstarts, and tests.
+The `0.2.2` value is consumed by package metadata, `/health`, root status copy, public UI copy, docs, release verifier artifact names, and tests. The CivicCore v1.2.0 dependency is consumed by `pyproject.toml`, workflow install steps, README/manual quickstarts, and tests.
 
 ## Step 9 - Five-Lens Self-Audit
 

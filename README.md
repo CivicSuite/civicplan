@@ -2,7 +2,7 @@
 
 CivicPlan is the CivicSuite module for comprehensive-plan policy lookup and cited planning analysis support.
 
-Current state: **v0.2.2 corrective demotion state - deterministic scaffold; no real AI layer, full frontend, real municipal data/search, migrations, or public-use gate. The previous v1.0.0 release was published in error. This narrow truth-repair release is no functional upgrade; it exists solely to supersede the false v1.0.0 release from 2026-05-21 in GitHub's Latest impression. The CivicCore pin is unchanged.** CivicPlan remains aligned to the CivicCore v1.1.0 release wheel. CivicPlan does not ship official planning determinations, legal advice, live external vendor calls by default, permitting-system write-back, or elected-body decisions.
+Current state: **v0.2.2 corrective demotion state - deterministic scaffold; no real AI layer, full frontend, real municipal data/search, migrations, or public-use gate. The previous v1.0.0 release was published in error. This narrow truth-repair release is no functional upgrade; it exists solely to supersede the false v1.0.0 release from 2026-05-21 in GitHub's Latest impression. The CivicCore pin is aligned to the current city-core platform.** CivicPlan remains aligned to the CivicCore v1.2.0 release wheel. CivicPlan does not ship official planning determinations, legal advice, live external vendor calls by default, permitting-system write-back, or elected-body decisions.
 
 ## What CivicPlan Does
 
@@ -23,7 +23,7 @@ Current state: **v0.2.2 corrective demotion state - deterministic scaffold; no r
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.1.0/civiccore-1.1.0-py3-none-any.whl
+python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.2.0/civiccore-1.2.0-py3-none-any.whl
 python -m pip install -e ".[dev]"
 python -m pytest -q
 bash scripts/verify-release.sh

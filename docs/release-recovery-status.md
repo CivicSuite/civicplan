@@ -8,7 +8,7 @@ Repo: `CivicSuite/civicplan`
 `v1.0.0` is the active corrective demotion state for CivicPlan. The
 current release pass rechecks the repo with local release gates, browser QA,
 documentation truth checks, build artifacts, adversarial integration tests, and
-current CivicCore v1.1.0 dependency alignment. The previous demotion remains
+current CivicCore v1.2.0 dependency alignment. The previous demotion remains
 historical context only.
 
 ## Recovery Gates

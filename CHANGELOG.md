@@ -12,14 +12,14 @@
 ### Changed
 
 - Promoted CivicPlan from the demoted recovery label to a v1.0.0 public-use module release candidate.
-- Synchronized package, runtime, docs, tests, and release verifier surfaces around CivicCore v1.1.0.
+- Synchronized package, runtime, docs, tests, and release verifier surfaces around CivicCore v1.2.0.
 - Preserved the planning-safety boundary: CivicPlan provides cited planning support and staff-analysis context, not official planning determinations, legal advice, live vendor calls by default, permitting write-back, or elected-body decisions.
 
 ## [0.2.0] - 2026-05-11
 
 ### Changed
 
-- feat(deps): bump civiccore pin to v1.1.0 and use shared `staff_key_gate` for timing-safe persisted staff-analysis auth.
+- feat(deps): bump civiccore pin to v1.2.0 and use shared `staff_key_gate` for timing-safe persisted staff-analysis auth.
 
 ## [0.2.0] - 2026-05-10
 

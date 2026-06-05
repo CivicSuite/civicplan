@@ -18,7 +18,7 @@ Runtime sign-off confidence: High for local Windows Python runtime, FastAPI heal
 
 Severity summary: 0 Blocker, 0 Critical, 0 Major, 0 Minor, 0 Nit open.
 
-CI/workflow posture: `.github/workflows/verify.yml` and `release.yml` exist, install CivicCore v1.1.0, and run `bash scripts/verify-release.sh`. `verify.yml` includes the required concurrency budget guard.
+CI/workflow posture: `.github/workflows/verify.yml` and `release.yml` exist, install CivicCore v1.2.0, and run `bash scripts/verify-release.sh`. `verify.yml` includes the required concurrency budget guard.
 
 ## 2. Audit Coverage Ledger
 
@@ -30,11 +30,11 @@ CI/workflow posture: `.github/workflows/verify.yml` and `release.yml` exist, ins
 | Windows install path | Checked | local Windows `bash scripts/verify-release.sh` | packaged install via suite occurs later |
 | Linux or Unix install path | Partially checked | CI workflow will run Ubuntu verifier | pending PR/CI |
 | platform parity verdict | Checked | source module has Python package parity; no native installer claim | suite installer truth follows source release |
-| first boot | Checked | `/health` returned 200 with CivicPlan 1.0.0 and CivicCore 1.1.0 | none |
+| first boot | Checked | `/health` returned 200 with CivicPlan 0.2.2 and CivicCore 1.2.0 | none |
 | required post-install steps | Checked | README/manual quickstart and verifier path inspected | none |
 | migrations | Not applicable | optional SQLite/SQLAlchemy repository initializes tables | no external migration system |
 | seed/bootstrap requirements | Checked | deterministic sample policies and optional local DB path | none |
-| runtime dependency and model requirements | Checked | CivicCore v1.1.0, FastAPI, SQLAlchemy, Uvicorn; no LLM required | none |
+| runtime dependency and model requirements | Checked | CivicCore v1.2.0, FastAPI, SQLAlchemy, Uvicorn; no LLM required | none |
 | first-boot dependency truth | Checked | app boots without `CIVICPLAN_POLICY_DB_URL` | none |
 | secrets and credential handling | Checked | staff key read from env, no secrets committed | production identity remains city responsibility |
 | auth and session handling | Checked | staff-only persisted routes require role/key when DB configured | no full SSO in module scope |
@@ -64,7 +64,7 @@ CI/workflow posture: `.github/workflows/verify.yml` and `release.yml` exist, ins
 | Claim | Source | Verdict | Evidence |
 |---|---|---|---|
 | CivicPlan is v1.0.0 | package/docs/verifier | True | `pyproject.toml`, `civicplan/__init__.py`, `/health`, `scripts/verify-release.sh` |
-| Uses CivicCore v1.1.0 | package/workflows/docs | True | direct wheel pin and CI workflow install commands |
+| Uses CivicCore v1.2.0 | package/workflows/docs | True | direct wheel pin and CI workflow install commands |
 | Provides cited plan-policy lookup | README/API/tests | True | lookup API/tests cite plan policies |
 | Provides staff-only local policy ingestion | README/API/tests | True | DB + staff key tests pass |
 | Provides plan navigator, Q&A, synthesis, amendments, progress | README/API/tests | True | `tests/test_v1_plan_workflows.py` |
@@ -136,7 +136,7 @@ Verification gaps: city-specific validation remains external and is not claimed.
 
 Area verdict: clean.
 
-Strengths: README, text README, manuals, security note, docs index, implementation plan, reconciliation, release status, browser QA, and changelog are synchronized around v1.0.0 and CivicCore v1.1.0.
+Strengths: README, text README, manuals, security note, docs index, implementation plan, reconciliation, release status, browser QA, and changelog are synchronized around v0.2.2 and CivicCore v1.2.0.
 
 Findings: none open.
 
@@ -156,7 +156,7 @@ Verification gaps: suite installer/module-selection integration happens in Civic
 
 Area verdict: clean locally.
 
-Strengths: package metadata, runtime health, public UI, docs, tests, release verifier, wheel, sdist, SHA256SUMS, and workflows all align to v1.0.0/CivicCore v1.1.0.
+Strengths: package metadata, runtime health, public UI, docs, tests, release verifier, wheel, sdist, SHA256SUMS, and workflows all align to v0.2.2/CivicCore v1.2.0.
 
 Findings: none open.
 
