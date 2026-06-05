@@ -93,7 +93,7 @@ def render_public_lookup_page() -> str:
   </section>
   <section class="notice" aria-labelledby="boundary-title">
     <h2 id="boundary-title">Important boundaries</h2>
-    <p>CivicPlan v0.2.2 is a narrow truth-repair release with no functional upgrade. It exists solely to supersede the false v1.0.0 release from 2026-05-21 in GitHub's Latest impression; the CivicCore pin is unchanged. CivicPlan provides cited plan lookup, local policy ingestion when configured, CivicZone and CivicClerk context contracts, amendment history, progress targets, and adversarial local integration validation. It does not call live external systems by default, provide legal advice, or make official planning determinations.</p>
+    <p>CivicPlan v0.2.2 is a narrow truth-repair release with no functional upgrade. It exists solely to supersede the false v1.0.0 release from 2026-05-21 in GitHub's Latest impression; the CivicCore pin is aligned to the current city-core platform. CivicPlan provides cited plan lookup, local policy ingestion when configured, CivicZone and CivicClerk context contracts, amendment history, progress targets, and adversarial local integration validation. It does not call live external systems by default, provide legal advice, or make official planning determinations.</p>
   </section>
 </main>
 <footer><p>CivicPlan is part of the Apache 2.0 CivicSuite open-source municipal AI project.</p></footer>

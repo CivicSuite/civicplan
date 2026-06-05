@@ -30,6 +30,8 @@ CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.2.0 r
 
 Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require `CIVICPLAN_STAFF_API_KEY`, `X-CivicPlan-Role: staff`, and matching `X-CivicPlan-Staff-Key`. CivicPlan uses CivicCore `staff_key_gate` for timing-safe key comparison. Leave it unset for deterministic sample behavior.
 
+Use the `civicplan-import-policies` console script to batch-load local municipal plan-policy CSV exports into the configured policy store. See `docs/local-policy-import.md` for required columns and failure behavior.
+
 Run local verification with:
 
 ```powershell

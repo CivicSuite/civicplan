@@ -51,6 +51,8 @@ bash scripts/verify-release.sh
 
 Set `CIVICPLAN_POLICY_DB_URL` to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis and policy-ingestion routes are staff-only and require `CIVICPLAN_STAFF_API_KEY`, `X-CivicPlan-Role: staff`, and matching `X-CivicPlan-Staff-Key`. CivicPlan uses CivicCore `staff_key_gate` for timing-safe key comparison. When unset, CivicPlan continues to use deterministic in-memory sample data.
 
+Use the `civicplan-import-policies` console script to batch-load local municipal plan-policy CSV exports into the configured policy store; see [docs/local-policy-import.md](docs/local-policy-import.md).
+
 ## License
 
 Code is Apache 2.0. Documentation is CC BY 4.0.
