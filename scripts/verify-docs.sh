@@ -37,6 +37,8 @@ required=(
   "civicplan/plan_workflows.py"
   "civicplan/integration_mocks.py"
   "civicplan/records_export.py"
+  "civicplan/data_import.py"
+  "civicplan/db_admin.py"
   "civicplan/public_ui.py"
 )
 

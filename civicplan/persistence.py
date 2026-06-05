@@ -61,6 +61,26 @@ class StoredStaffAnalysis:
     created_at: datetime
 
 
+@dataclass(frozen=True)
+class SchemaStatus:
+    schema_version: str | None
+    expected_schema_version: str
+    ready: bool
+    missing_tables: tuple[str, ...]
+    dialect: str
+
+
+SCHEMA_VERSION = "2026-06-05-001"
+
+schema_migrations = sa.Table(
+    "schema_migrations",
+    metadata,
+    sa.Column("schema_version", sa.String(40), primary_key=True),
+    sa.Column("applied_at", sa.DateTime(timezone=True), nullable=False),
+    schema="civicplan",
+)
+
+
 class PlanPolicyRepository:
     """SQLAlchemy-backed policy and staff-analysis records for local planning workflows."""
 
@@ -72,9 +92,54 @@ class PlanPolicyRepository:
             self.engine = base_engine
             with self.engine.begin() as connection:
                 connection.execute(sa.text("CREATE SCHEMA IF NOT EXISTS civicplan"))
-        metadata.create_all(self.engine)
+        self.migrate()
         if seed_defaults:
             self.seed_policies(POLICIES.items())
+
+    def migrate(self) -> SchemaStatus:
+        """Apply non-destructive local schema setup and return the resulting status."""
+
+        metadata.create_all(self.engine)
+        with self.engine.begin() as connection:
+            exists = connection.execute(
+                sa.select(schema_migrations.c.schema_version).where(
+                    schema_migrations.c.schema_version == SCHEMA_VERSION
+                )
+            ).first()
+            if exists is None:
+                connection.execute(
+                    schema_migrations.insert().values(
+                        schema_version=SCHEMA_VERSION,
+                        applied_at=datetime.now(UTC),
+                    )
+                )
+        return self.schema_status()
+
+    def schema_status(self) -> SchemaStatus:
+        inspector = sa.inspect(self.engine)
+        translated_schema = None if self.engine.dialect.name == "sqlite" else "civicplan"
+        available_tables = set(inspector.get_table_names(schema=translated_schema))
+        expected_tables = {
+            "plan_policy_records",
+            "staff_analysis_records",
+            "schema_migrations",
+        }
+        missing_tables = tuple(sorted(expected_tables - available_tables))
+        schema_version = None
+        if "schema_migrations" not in missing_tables:
+            with self.engine.begin() as connection:
+                schema_version = connection.execute(
+                    sa.select(schema_migrations.c.schema_version)
+                    .order_by(schema_migrations.c.applied_at.desc())
+                    .limit(1)
+                ).scalar_one_or_none()
+        return SchemaStatus(
+            schema_version=schema_version,
+            expected_schema_version=SCHEMA_VERSION,
+            ready=schema_version == SCHEMA_VERSION and not missing_tables,
+            missing_tables=missing_tables,
+            dialect=self.engine.dialect.name,
+        )
 
     def seed_policies(self, policies: Iterable[tuple[str, PlanPolicy]]) -> None:
         now = datetime.now(UTC)

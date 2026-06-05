@@ -53,6 +53,8 @@ Set `CIVICPLAN_POLICY_DB_URL` to enable persistent plan-policy and staff-analysi
 
 Use the `civicplan-import-policies` console script to batch-load local municipal plan-policy CSV exports into the configured policy store; see [docs/local-policy-import.md](docs/local-policy-import.md).
 
+Use the `civicplan-db-status` console script with the same SQLAlchemy URL to initialize and verify the local CivicPlan schema before pointing the runtime at a policy database.
+
 ## License
 
 Code is Apache 2.0. Documentation is CC BY 4.0.

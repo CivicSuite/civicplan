@@ -6,6 +6,8 @@ CivicPlan can load local municipal plan-policy CSV exports into the configured p
 
 Use the same SQLAlchemy URL that the runtime reads from `CIVICPLAN_POLICY_DB_URL`. The importer creates policy tables if needed and does not seed sample policies.
 
+Before importing, use the same URL with `civicplan-db-status` to create the local schema non-destructively and confirm the expected schema version is recorded.
+
 ## CSV Contract
 
 Required columns:

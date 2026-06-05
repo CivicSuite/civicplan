@@ -1,8 +1,11 @@
+import subprocess
+import sys
+
 from fastapi.testclient import TestClient
 
 import civicplan.main as main_module
 from civicplan.main import app
-from civicplan.persistence import PlanPolicyRepository
+from civicplan.persistence import SCHEMA_VERSION, PlanPolicyRepository
 from civicplan.policy_lookup import PlanPolicy
 
 
@@ -33,6 +36,42 @@ def test_policy_and_staff_analysis_records_persist(tmp_path) -> None:
     assert reloaded_analysis.heading == "Plan consistency context for Maple Avenue Homes"
     assert "Comprehensive Plan, Housing Element, Policy H-2.1" in reloaded_analysis.citations
     db_path.unlink(missing_ok=True)
+
+
+def test_policy_repository_records_schema_status(tmp_path) -> None:
+    db_path = tmp_path / "schema-status.db"
+    repository = PlanPolicyRepository(db_url=f"sqlite:///{db_path}", seed_defaults=False)
+    try:
+        status = repository.schema_status()
+    finally:
+        repository.engine.dispose()
+
+    assert status.ready is True
+    assert status.schema_version == SCHEMA_VERSION
+    assert status.expected_schema_version == SCHEMA_VERSION
+    assert status.missing_tables == ()
+    assert status.dialect == "sqlite"
+
+
+def test_db_status_cli_reports_ready_schema(tmp_path) -> None:
+    db_path = tmp_path / "schema-cli.db"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "civicplan.db_admin",
+            "--db-url",
+            f"sqlite:///{db_path}",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "CivicPlan schema ready" in result.stdout
+    assert f"version={SCHEMA_VERSION}" in result.stdout
+    assert "missing_tables=none" in result.stdout
 
 
 def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:

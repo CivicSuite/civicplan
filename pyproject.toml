@@ -21,6 +21,7 @@ dependencies = [
 
 [project.scripts]
 civicplan-import-policies = "civicplan.data_import:main"
+civicplan-db-status = "civicplan.db_admin:main"
 
 [project.optional-dependencies]
 dev = [

@@ -39,6 +39,7 @@ The format follows Keep a Changelog, and this project follows Semantic Versionin
 
 - Replaced the static `/civicplan` sample page with API-backed lookup, question, consistency, navigator, and progress controls.
 - Fixed no-database sample policy listing so navigator and cited Q&A use distinct canonical sample policies instead of duplicate comprehensive-plan records.
+- Added `civicplan-db-status` to initialize and verify the local CivicPlan policy schema version before runtime use.
 
 ## [0.2.1] - 2026-05-21
 
