@@ -119,7 +119,7 @@ def root() -> dict[str, str]:
             "local adversarial integration mocks, and an accessible public UI. It does not make official planning determinations, "
             "provide legal advice, call live external systems by default, or replace planner/elected-body judgment."
         ),
-        "next_step": "Configure local plan policies with CIVICPLAN_POLICY_DB_URL and keep official actions in staff review.",
+        "next_step": "Configure CIVICPLAN_POLICY_DB_URL, load local plan policies, and verify /ready before public use.",
     }
 
 
@@ -133,6 +133,20 @@ def health() -> dict[str, str]:
         "version": __version__,
         "civiccore_version": CIVICCORE_VERSION,
     }
+
+
+@app.get("/ready")
+def ready() -> dict[str, object]:
+    """Return public-use readiness without treating sample fallback as customer data."""
+
+    return _readiness_payload()
+
+
+@app.get("/api/v1/civicplan/readiness")
+def readiness() -> dict[str, object]:
+    """Return detailed CivicPlan local-data readiness for installers and operators."""
+
+    return _readiness_payload()
 
 
 @app.exception_handler(RequestValidationError)
@@ -388,7 +402,7 @@ def _get_policy_repository() -> PlanPolicyRepository:
     if _policy_repository is None or db_url != _policy_db_url:
         _dispose_policy_repository()
         _policy_db_url = db_url
-        _policy_repository = PlanPolicyRepository(db_url=db_url)
+        _policy_repository = PlanPolicyRepository(db_url=db_url, seed_defaults=False)
     return _policy_repository
 
 
@@ -422,6 +436,44 @@ def _list_plan_policies(*, plan_type: str | None = None) -> tuple[PlanPolicy, ..
             return policies
         return tuple(policy for policy in policies if policy.plan_type == plan_type.strip().casefold())
     return _get_policy_repository().list_policies(plan_type=plan_type)
+
+
+def _readiness_payload() -> dict[str, object]:
+    db_url = _policy_database_url()
+    if db_url is None:
+        return {
+            "status": "not-ready",
+            "ready": False,
+            "policy_database_configured": False,
+            "schema_ready": False,
+            "schema_version": None,
+            "expected_schema_version": None,
+            "policy_count": 0,
+            "blockers": [
+                "Set CIVICPLAN_POLICY_DB_URL to a local policy database.",
+                "Load adopted municipal plan policies before public use.",
+            ],
+        }
+
+    repository = _get_policy_repository()
+    schema_status = repository.schema_status()
+    policies = repository.list_policies()
+    blockers: list[str] = []
+    if not schema_status.ready:
+        blockers.append("Run the local CivicPlan schema status/migration check.")
+    if not policies:
+        blockers.append("Load adopted municipal plan policies before public use.")
+    ready_for_public_use = not blockers
+    return {
+        "status": "ready" if ready_for_public_use else "not-ready",
+        "ready": ready_for_public_use,
+        "policy_database_configured": True,
+        "schema_ready": schema_status.ready,
+        "schema_version": schema_status.schema_version,
+        "expected_schema_version": schema_status.expected_schema_version,
+        "policy_count": len(policies),
+        "blockers": blockers,
+    }
 
 
 def _zoning_context_topic(request: ZoningPolicyContextRequest) -> str:

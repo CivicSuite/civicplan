@@ -45,7 +45,8 @@ def test_root_endpoint_states_runtime_boundary() -> None:
     assert "staff-only local policy ingestion" in payload["message"]
     assert "CivicZone and CivicClerk context contracts" in payload["message"]
     assert "does not make official planning determinations" in payload["message"]
-    assert payload["next_step"].startswith("Configure local plan policies")
+    assert payload["next_step"].startswith("Configure CIVICPLAN_POLICY_DB_URL")
+    assert "verify /ready" in payload["next_step"]
 
 
 def test_health_endpoint_reports_versions() -> None:

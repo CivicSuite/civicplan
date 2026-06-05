@@ -10,6 +10,8 @@ It does not ship official planning determinations, legal advice, live external v
 Core API:
 - GET /
 - GET /health
+- GET /ready
+- GET /api/v1/civicplan/readiness
 - GET /civicplan
 - POST /api/v1/civicplan/policies/lookup
 - POST /api/v1/civicplan/context/zoning
@@ -20,7 +22,7 @@ Core API:
 
 Quickstart: install CivicCore first with python -m pip install https://github.com/CivicSuite/civiccore/releases/download/v1.2.0/civiccore-1.2.0-py3-none-any.whl, then run python -m pip install -e ".[dev]".
 
-Set CIVICPLAN_POLICY_DB_URL to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis create/read routes are staff-only and require X-CivicPlan-Role: staff from a trusted staff or service workflow. When unset, CivicPlan continues to use deterministic in-memory sample data.
+Set CIVICPLAN_POLICY_DB_URL to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis create/read routes are staff-only and require X-CivicPlan-Role: staff from a trusted staff or service workflow. When unset, CivicPlan continues to use deterministic in-memory sample data. When set, the runtime initializes schema without seeding sample policies; /ready remains not-ready until adopted local policies are loaded.
 
 Use the civicplan-import-policies console script to batch-load local municipal plan-policy CSV exports into CIVICPLAN_POLICY_DB_URL. See docs/local-policy-import.md.
 

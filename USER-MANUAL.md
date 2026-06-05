@@ -12,6 +12,8 @@ CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.2.0 r
 
 - `GET /`
 - `GET /health`
+- `GET /ready`
+- `GET /api/v1/civicplan/readiness`
 - `GET /civicplan`
 - `POST /api/v1/civicplan/policies/lookup`
 - `POST /api/v1/civicplan/policies/ingest`
@@ -29,6 +31,8 @@ CivicPlan is a FastAPI Python package pinned to the published CivicCore v1.2.0 r
 - `POST /api/v1/civicplan/export`
 
 Set `CIVICPLAN_POLICY_DB_URL` to persist plan-policy records and staff-analysis outlines. Persisted staff-analysis create/read routes are staff-only and require `CIVICPLAN_STAFF_API_KEY`, `X-CivicPlan-Role: staff`, and matching `X-CivicPlan-Staff-Key`. CivicPlan uses CivicCore `staff_key_gate` for timing-safe key comparison. Leave it unset for deterministic sample behavior.
+
+Before public use, check `/ready` or `/api/v1/civicplan/readiness`. The readiness gate is `not-ready` until a local policy database is configured, the schema is ready, and adopted local policies are loaded.
 
 Use the `civicplan-import-policies` console script to batch-load local municipal plan-policy CSV exports into the configured policy store. See `docs/local-policy-import.md` for required columns and failure behavior.
 

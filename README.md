@@ -2,7 +2,7 @@
 
 CivicPlan is the CivicSuite module for comprehensive-plan policy lookup and cited planning analysis support.
 
-Current state: **v0.2.2 corrective demotion state - deterministic scaffold; no real AI layer, full frontend, real municipal data/search, migrations, or public-use gate. The previous v1.0.0 release was published in error. This narrow truth-repair release is no functional upgrade; it exists solely to supersede the false v1.0.0 release from 2026-05-21 in GitHub's Latest impression. The CivicCore pin is aligned to the current city-core platform.** CivicPlan remains aligned to the CivicCore v1.2.0 release wheel. CivicPlan does not ship official planning determinations, legal advice, live external vendor calls by default, permitting-system write-back, or elected-body decisions.
+Current state: **v0.2.2 corrective demotion state - local-first cited planning-support runtime. The previous v1.0.0 release was published in error. This narrow truth-repair release is no functional upgrade; it exists solely to supersede the false v1.0.0 release from 2026-05-21 in GitHub's Latest impression. The CivicCore pin is aligned to the current city-core platform.** CivicPlan remains aligned to the CivicCore v1.2.0 release wheel and now includes local policy import, schema status, an API-backed public UI, and readiness gates. CivicPlan does not ship official planning determinations, legal advice, live external vendor calls by default, permitting-system write-back, or elected-body decisions.
 
 ## What CivicPlan Does
 
@@ -33,6 +33,7 @@ bash scripts/verify-release.sh
 
 - `GET /` returns current module status and next roadmap boundary.
 - `GET /health` returns package and CivicCore version information.
+- `GET /ready` and `GET /api/v1/civicplan/readiness` report whether local policy data is configured, schema-ready, and loaded before public use.
 - `GET /civicplan` returns the accessible public lookup UI wired to local CivicPlan APIs.
 - `POST /api/v1/civicplan/policies/lookup` returns a cited sample plan policy.
 - `POST /api/v1/civicplan/policies/ingest` stores a staff-only local plan policy when `CIVICPLAN_POLICY_DB_URL` is configured.
@@ -49,7 +50,7 @@ bash scripts/verify-release.sh
 - `GET /api/v1/civicplan/staff-analysis/{analysis_id}` retrieves persisted staff-analysis records when `CIVICPLAN_POLICY_DB_URL` is configured and both staff headers are present.
 - `POST /api/v1/civicplan/export` returns a records-ready plan-policy export checklist.
 
-Set `CIVICPLAN_POLICY_DB_URL` to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis and policy-ingestion routes are staff-only and require `CIVICPLAN_STAFF_API_KEY`, `X-CivicPlan-Role: staff`, and matching `X-CivicPlan-Staff-Key`. CivicPlan uses CivicCore `staff_key_gate` for timing-safe key comparison. When unset, CivicPlan continues to use deterministic in-memory sample data.
+Set `CIVICPLAN_POLICY_DB_URL` to enable persistent plan-policy and staff-analysis records. Persisted staff-analysis and policy-ingestion routes are staff-only and require `CIVICPLAN_STAFF_API_KEY`, `X-CivicPlan-Role: staff`, and matching `X-CivicPlan-Staff-Key`. CivicPlan uses CivicCore `staff_key_gate` for timing-safe key comparison. When unset, CivicPlan continues to use deterministic in-memory sample data. When set, the runtime initializes schema without seeding sample policies; `/ready` remains `not-ready` until adopted local policies are loaded.
 
 Use the `civicplan-import-policies` console script to batch-load local municipal plan-policy CSV exports into the configured policy store; see [docs/local-policy-import.md](docs/local-policy-import.md).
 

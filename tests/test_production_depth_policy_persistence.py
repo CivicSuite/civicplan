@@ -113,6 +113,72 @@ def test_api_uses_configured_policy_database(monkeypatch, tmp_path) -> None:
     db_path.unlink(missing_ok=True)
 
 
+def test_readiness_requires_configured_policy_database() -> None:
+    response = client.get("/api/v1/civicplan/readiness")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "not-ready"
+    assert payload["ready"] is False
+    assert payload["policy_database_configured"] is False
+    assert "Set CIVICPLAN_POLICY_DB_URL" in payload["blockers"][0]
+
+
+def test_configured_runtime_does_not_seed_sample_policies(monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "empty-runtime.db"
+    monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
+
+    try:
+        response = client.get("/ready")
+        repository = main_module._get_policy_repository()
+        policies = repository.list_policies()
+    finally:
+        main_module._dispose_policy_repository()
+        main_module._policy_db_url = None
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "not-ready"
+    assert payload["schema_ready"] is True
+    assert payload["policy_count"] == 0
+    assert "Load adopted municipal plan policies" in payload["blockers"][0]
+    assert policies == ()
+
+
+def test_readiness_passes_with_loaded_local_policies(monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "ready-runtime.db"
+    db_url = f"sqlite:///{db_path}"
+    repository = PlanPolicyRepository(db_url=db_url, seed_defaults=False)
+    repository.upsert_policy(
+        topic_key="resilience",
+        policy=PlanPolicy(
+            policy_id="sustainability-plan-4.2",
+            plan_type="sustainability",
+            title="Heat resilience corridors",
+            citation="Sustainability Plan, Climate Chapter, Policy C-4.2",
+            excerpt="Prioritize shade, cool pavement, and emergency cooling access.",
+            relevance="Relevant for local heat-resilience capital planning.",
+        ),
+    )
+    repository.engine.dispose()
+    monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", db_url)
+
+    try:
+        response = client.get("/api/v1/civicplan/readiness")
+    finally:
+        main_module._dispose_policy_repository()
+        main_module._policy_db_url = None
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "ready"
+    assert payload["ready"] is True
+    assert payload["policy_database_configured"] is True
+    assert payload["schema_ready"] is True
+    assert payload["policy_count"] == 1
+    assert payload["blockers"] == []
+
+
 def test_persisted_staff_analysis_requires_staff_role(monkeypatch, tmp_path) -> None:
     db_path = tmp_path / "staff-auth.db"
     monkeypatch.setenv("CIVICPLAN_POLICY_DB_URL", f"sqlite:///{db_path}")
