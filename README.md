@@ -16,7 +16,7 @@ Current state: **v0.2.2 corrective demotion state - deterministic scaffold; no r
 - Tracks amendment status and progress-target evidence for staff review.
 - Drafts a cited staff-analysis outline that requires human review.
 - Builds records-ready export checklists that preserve proposal, policy, reviewer, and generated-output provenance.
-- Demonstrates a public plan-policy lookup UI at `/civicplan`.
+- Provides an API-backed public plan-policy lookup UI at `/civicplan`.
 
 ## Developer Quickstart
 
@@ -33,7 +33,7 @@ bash scripts/verify-release.sh
 
 - `GET /` returns current module status and next roadmap boundary.
 - `GET /health` returns package and CivicCore version information.
-- `GET /civicplan` returns the accessible public sample UI.
+- `GET /civicplan` returns the accessible public lookup UI wired to local CivicPlan APIs.
 - `POST /api/v1/civicplan/policies/lookup` returns a cited sample plan policy.
 - `POST /api/v1/civicplan/policies/ingest` stores a staff-only local plan policy when `CIVICPLAN_POLICY_DB_URL` is configured.
 - `GET /api/v1/civicplan/plans/navigator` returns cited plan structure grouped by plan type.

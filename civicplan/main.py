@@ -23,7 +23,7 @@ from civicplan.plan_workflows import (
     synthesize_plan_context,
 )
 from civicplan.persistence import PlanPolicyRepository, StoredStaffAnalysis
-from civicplan.policy_lookup import PlanPolicy
+from civicplan.policy_lookup import POLICIES, PlanPolicy
 from civicplan.policy_lookup import lookup_plan_policy
 from civicplan.public_ui import render_public_lookup_page
 from civicplan.records_export import build_policy_export
@@ -171,7 +171,7 @@ async def validation_exception_handler(
 
 @app.get("/civicplan", response_class=HTMLResponse)
 def public_civicplan_page() -> str:
-    """Return the public sample plan-policy lookup UI."""
+    """Return the public plan-policy lookup UI."""
 
     return render_public_lookup_page()
 
@@ -417,7 +417,7 @@ def _lookup_plan_policy_with_source(*, topic: str, plan_type: str = "comprehensi
 
 def _list_plan_policies(*, plan_type: str | None = None) -> tuple[PlanPolicy, ...]:
     if _policy_database_url() is None:
-        policies = tuple(lookup_plan_policy(topic=key) for key in ("housing", "transportation", "parks"))
+        policies = tuple(POLICIES.values())
         if plan_type is None:
             return policies
         return tuple(policy for policy in policies if policy.plan_type == plan_type.strip().casefold())

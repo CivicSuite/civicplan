@@ -20,8 +20,18 @@ def test_plan_navigator_groups_policy_structure() -> None:
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["plans"][0]["plan_type"] == "comprehensive"
-    assert payload["plans"][0]["policies"][0]["citation"]
+    plan_types = {plan["plan_type"] for plan in payload["plans"]}
+    policy_ids = {
+        policy["policy_id"]
+        for plan in payload["plans"]
+        for policy in plan["policies"]
+    }
+    assert {"comprehensive", "transportation", "parks"} <= plan_types
+    assert {
+        "comp-plan-housing-2.1",
+        "transportation-plan-3.4",
+        "parks-plan-1.2",
+    } <= policy_ids
     assert "staff verify applicability" in payload["boundary"]
 
 
@@ -39,6 +49,7 @@ def test_plan_question_answer_and_synthesis_are_cited_and_review_required() -> N
     assert answer.json()["status"] == "answered"
     assert answer.json()["review_required"] is True
     assert answer.json()["citations"]
+    assert len(answer.json()["source_policy_ids"]) == len(set(answer.json()["source_policy_ids"]))
     assert synthesis.status_code == 200
     assert synthesis.json()["review_required"] is True
     assert synthesis.json()["citations"]

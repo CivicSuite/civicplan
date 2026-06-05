@@ -154,9 +154,18 @@ def test_public_ui_route_is_accessible_and_honest() -> None:
     assert '<a class="skip-link" href="#main">Skip to main content</a>' in text
     assert '<main id="main" tabindex="-1">' in text
     assert "v0.2.2 cited plan policy + staff analysis" in text
-    assert "<button" not in text
-    assert "<textarea" not in text
-    assert "Static sample proposal" in text
+    assert '<form id="lookup-form">' in text
+    assert '<button type="submit">Look Up Policy</button>' in text
+    assert 'id="ask-button"' in text
+    assert '<textarea id="topic" name="topic">' in text
+    assert "/api/v1/civicplan/policies/lookup" in text
+    assert "/api/v1/civicplan/questions/answer" in text
+    assert "/api/v1/civicplan/consistency/check" in text
+    assert "/api/v1/civicplan/plans/navigator" in text
+    assert "/api/v1/civicplan/progress/targets" in text
+    assert '""": "&quot;"' not in text
+    assert "if (char === '\"') return \"&quot;\";" in text
+    assert "Static sample proposal" not in text
     assert "Plan navigator" in text
     assert "Progress tracking" in text
     assert "does not make zoning" in text
